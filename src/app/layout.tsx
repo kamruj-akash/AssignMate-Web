@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import Providers from "@/provider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Roboto, Roboto_Slab } from "next/font/google";
 import "./globals.css";
@@ -40,7 +41,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         robotoSlabHeading.variable,
       )}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <Providers>
+        <body className="min-h-full flex flex-col">{children}</body>
+      </Providers>
     </html>
   );
 }

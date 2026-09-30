@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="700" viewBox="0 0 1600 700">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#00A99D"/>
+      <stop offset="100%" stop-color="#007F78"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-opacity=".14"/>
+    </filter>
+  </defs>
+
+  <!-- emblem -->
+  <g transform="translate(95 85)" filter="url(#shadow)">
+    <!-- rounded shield -->
+    <path d="M265 12
+             C274 12 283 15 291 20
+             L430 101
+             V246
+             C430 374 350 463 265 505
+             C180 463 100 374 100 246
+             V101
+             L239 20
+             C247 15 256 12 265 12Z"
+          fill="white" stroke="url(#g)" stroke-width="24"/>
+    <!-- graduation cap -->
+    <path d="M64 205 L265 116 L466 205 L265 294 Z"
+          fill="url(#g)"/>
+    <path d="M126 250 V322
+             C168 360 213 379 265 379
+             C317 379 362 360 404 322
+             V250"
+          fill="none" stroke="#007F78" stroke-width="25" stroke-linecap="round"/>
+    <!-- tassel -->
+    <path d="M466 205 V291 C466 310 452 325 433 325"
+          fill="none" stroke="#007F78" stroke-width="18" stroke-linecap="round"/>
+    <circle cx="425" cy="325" r="16" fill="#007F78"/>
+    <!-- trust check -->
+    <path d="M191 423 L238 469 L338 360"
+          fill="none" stroke="#00A99D" stroke-width="28"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- wordmark -->
+  <text x="640" y="320"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="150" font-weight="700" fill="#111315"
+        letter-spacing="-6">AssignMate</text>
+
+  <!-- subtle descriptor -->
+  <text x="650" y="390"
+        font-family="Arial, Helvetica, sans-serif"
+        font-size="31" font-weight="700" letter-spacing="7"
+        fill="#008F83">TRUST • WORK • PAYMENT</text>
+
+  <!-- tiny accent -->
+  <rect x="650" y="425" width="170" height="7" rx="3.5" fill="#00A99D"/>
+  <rect x="832" y="425" width="55" height="7" rx="3.5" fill="#D7EAE8"/>
+</svg>

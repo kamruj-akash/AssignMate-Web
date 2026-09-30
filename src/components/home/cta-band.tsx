@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export function CtaBand() {
   return (
@@ -10,8 +10,8 @@ export function CtaBand() {
           Ready to get started?
         </h2>
         <p className="max-w-md text-muted-foreground">
-          Whether you need an assignment done or you&apos;re ready to bid on
-          one — it takes a minute to sign up.
+          Whether you need an assignment done or you&apos;re ready to bid on one
+          — it takes a minute to sign up.
         </p>
         <div className="flex flex-col gap-3 sm:flex-row">
           <Button

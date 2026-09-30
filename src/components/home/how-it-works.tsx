@@ -1,12 +1,7 @@
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
-import {
-  Banknote,
   BadgeCheck,
+  Banknote,
   CheckCircle2,
   FileText,
   ListChecks,
