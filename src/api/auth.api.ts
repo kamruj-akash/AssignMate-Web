@@ -7,3 +7,7 @@ export const userLogin = (payload: ILoginPayload) => {
     body: payload,
   });
 };
+
+export const getMe = () => {
+  return apiClient("/auth/me");
+};

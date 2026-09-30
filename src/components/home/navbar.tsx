@@ -1,4 +1,6 @@
+"use client";
 import { Button } from "@/components/ui/button";
+import { useGetMe } from "@/hooks";
 import Link from "next/link";
 import Logo from "../shared/logo";
 
@@ -9,6 +11,8 @@ const NavItems = [
 ];
 
 export function Navbar() {
+  const { data: user } = useGetMe();
+  console.log(user);
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
