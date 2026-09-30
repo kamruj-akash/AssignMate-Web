@@ -38,16 +38,18 @@ export function LoginForm() {
         <form.Field name="email">
           {(field) => {
             const isInvalid =
-              field.state.meta.isTouched && field.state.meta.isValid;
+              field.state.meta.isTouched && !field.state.meta.isValid;
             return (
               <Field>
                 <FieldLabel htmlFor={field.name}>Email</FieldLabel>
                 <Input
+                  className={`h-10 ${isInvalid ? "border-destructive" : ""}`}
                   id={field.name}
                   type={field.name}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
                   placeholder="you@example.com"
-                  className="h-10"
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -57,7 +59,7 @@ export function LoginForm() {
         <form.Field name="password">
           {(field) => {
             const isInvalid =
-              field.state.meta.isTouched && field.state.meta.isValid;
+              field.state.meta.isTouched && !field.state.meta.isValid;
             return (
               <Field>
                 <div className="flex items-center justify-between">
@@ -70,6 +72,9 @@ export function LoginForm() {
                   </Link>
                 </div>
                 <PasswordInput
+                  className={`h-10 ${isInvalid ? "border-destructive" : ""}`}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
                   id={field.name}
                 />
