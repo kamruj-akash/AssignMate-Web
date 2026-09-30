@@ -20,6 +20,7 @@ export class ApiError extends Error {
 
 const apiClient = ofetch.create({
   baseURL: envConfig.PUBLIC_API,
+  credentials: "include",
   onResponseError({ response }) {
     const data = response._data as IApiErrorResponse | undefined;
     throw new ApiError(
