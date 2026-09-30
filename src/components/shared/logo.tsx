@@ -8,6 +8,7 @@ export default function Logo() {
         alt="Logo"
         width={100}
         height={100}
+        loading="eager"
       />
     </>
   );
