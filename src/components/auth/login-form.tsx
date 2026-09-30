@@ -8,12 +8,16 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useLogin } from "@/hooks";
 import { loginZodSchema } from "@/validation";
 import { useForm } from "@tanstack/react-form";
+import { Loader } from "lucide-react";
 import Link from "next/link";
+import { toast } from "../ui/toast";
 import { PasswordInput } from "./password-input";
 
 export function LoginForm() {
+  const { mutate: handleLogin, isPending } = useLogin();
   const form = useForm({
     defaultValues: {
       email: "",
@@ -23,7 +27,22 @@ export function LoginForm() {
       onSubmit: loginZodSchema,
     },
     onSubmit: ({ value }) => {
-      console.log(value);
+      handleLogin(value, {
+        onSuccess: (res) => {
+          toast.add({
+            title: "Login successful",
+            type: "success",
+          });
+          console.log(res);
+        },
+        onError: (err) => {
+          toast.add({
+            title: err.message || "Login failed",
+            type: "error",
+          });
+          console.log(err);
+        },
+      });
     },
   });
   return (
@@ -83,8 +102,14 @@ export function LoginForm() {
             );
           }}
         </form.Field>
-        <Button type="submit" size="lg" className="w-full">
-          Log in
+        <Button disabled={isPending} type="submit" size="lg" className="w-full">
+          {isPending ? (
+            <>
+              <Loader className="animate-spin" /> Logging in...
+            </>
+          ) : (
+            "Login"
+          )}
         </Button>
       </FieldGroup>
     </form>
