@@ -4,3 +4,5 @@ import { ofetch } from "ofetch";
 const apiClient = ofetch.create({
   baseURL: envConfig.PUBLIC_API,
 });
+
+export default apiClient;
