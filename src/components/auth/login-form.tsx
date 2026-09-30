@@ -16,6 +16,12 @@ import Link from "next/link";
 import { toast } from "../ui/toast";
 import { PasswordInput } from "./password-input";
 
+const DEMO_ACCOUNTS = [
+  { label: "Student", email: "student@assignmate.com", password: "123456" },
+  { label: "Expert", email: "expert@assignmate.com", password: "123456" },
+  { label: "Admin", email: "admin@assignmate.com", password: "123456" },
+] as const;
+
 export function LoginForm() {
   const { mutate: handleLogin, isPending } = useLogin();
   const form = useForm({
@@ -45,6 +51,13 @@ export function LoginForm() {
       });
     },
   });
+
+  const handleDemoLogin = (account: (typeof DEMO_ACCOUNTS)[number]) => {
+    form.setFieldValue("email", account.email);
+    form.setFieldValue("password", account.password);
+    form.handleSubmit();
+  };
+
   return (
     <form
       noValidate
@@ -111,6 +124,24 @@ export function LoginForm() {
             "Login"
           )}
         </Button>
+        <div className="flex items-center gap-3 text-xs uppercase text-muted-foreground">
+          <span className="h-px flex-1 bg-border" />
+          Or try a demo account
+          <span className="h-px flex-1 bg-border" />
+        </div>
+        <div className="grid grid-cols-3 gap-2">
+          {DEMO_ACCOUNTS.map((account) => (
+            <Button
+              key={account.label}
+              type="button"
+              variant="outline"
+              disabled={isPending}
+              onClick={() => handleDemoLogin(account)}
+            >
+              {account.label}
+            </Button>
+          ))}
+        </div>
       </FieldGroup>
     </form>
   );
