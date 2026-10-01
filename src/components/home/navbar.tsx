@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AuthButtons } from "../shared/auth-buttons";
 import Logo from "../shared/logo";
+import { hasSession } from "@/lib/session";
 
 const NavItems = [
   { tittle: "How it works", href: "#how-it-works" },
@@ -8,7 +9,9 @@ const NavItems = [
   { tittle: "Posted Assignments", href: "/assignments" },
 ];
 
-export function Navbar() {
+export async function Navbar() {
+  const isLoggedIn = await hasSession();
+
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
@@ -30,7 +33,7 @@ export function Navbar() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <AuthButtons />
+          <AuthButtons hasSession={isLoggedIn} />
         </div>
       </div>
     </header>

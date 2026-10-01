@@ -4,8 +4,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useGetMe } from "@/hooks";
 import Link from "next/link";
 
-export function AuthButtons() {
-  const { data: user, isLoading } = useGetMe();
+export function AuthButtons({ hasSession }: { hasSession: boolean }) {
+  const { data: user, isLoading } = useGetMe(!!hasSession);
 
   if (isLoading) return <Skeleton className="h-8 w-28" />;
 

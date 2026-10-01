@@ -18,10 +18,11 @@ export const useLogin = () => {
   });
 };
 
-export const useGetMe = () => {
+export const useGetMe = (enabled = true) => {
   return useQuery({
     queryKey: ["me"],
     queryFn: getMe,
+    enabled,
     retry: false,
     staleTime: 5 * 60 * 1000,
   });
@@ -41,13 +42,9 @@ export const useAuth = () => {
   const { mutate: googleLogin, isPending: isGoogleLoginLoading } =
     useGoogleLogin();
   const { mutate: login, isPending: isLoginLoading } = useLogin();
-  const { data, isLoading: isGetMeLoading } = useGetMe();
-  const getUser = data?.data;
   return {
     login,
     googleLogin,
-    getUser,
-    isGetMeLoading,
     isLoginLoading,
     isGoogleLoginLoading,
   };

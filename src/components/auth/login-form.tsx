@@ -26,7 +26,7 @@ const DEMO_ACCOUNTS = [
 ] as const;
 
 export function LoginForm() {
-  const { login, isLoginLoading, getUser, googleLogin, isGoogleLoginLoading } =
+  const { login, isLoginLoading, googleLogin, isGoogleLoginLoading } =
     useAuth();
   const router = useRouter();
   const isAnyLoading = isLoginLoading || isGoogleLoginLoading;
@@ -46,7 +46,9 @@ export function LoginForm() {
             title: "Login successful",
             type: "success",
           });
-          router.push(`/dashboard/${res.data.role.toLowerCase()}`);
+          router.push(
+            `/dashboard/${res?.data?.role ? res?.data?.role.toLowerCase() : "student"}`,
+          );
         },
         onError: (err) => {
           toast.add({
@@ -70,12 +72,14 @@ export function LoginForm() {
     if (isAnyLoading) return;
     const googleIdToken = credentialResponse.credential;
     googleLogin(googleIdToken, {
-      onSuccess: () => {
+      onSuccess: (res) => {
         toast.add({
           title: "Login successful",
           type: "success",
         });
-        router.push(`/dashboard/${getUser.role.toLowerCase()}`);
+        router.push(
+          `/dashboard/${res?.data?.role ? res?.data?.role.toLowerCase() : "student"}`,
+        );
       },
       onError: (err) => {
         toast.add({
@@ -86,10 +90,6 @@ export function LoginForm() {
       },
     });
   };
-
-  // if (getUser) {
-  //   router.push(`/dashboard/${getUser.role.toLowerCase()}`);
-  // }
 
   return (
     <form
