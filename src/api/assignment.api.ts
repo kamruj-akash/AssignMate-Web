@@ -1,5 +1,9 @@
 import apiClient from "@/lib/apiClient";
-import { ICreateAssignmentPayload } from "@/type/assignment.interface";
+import {
+  ICreateAssignmentPayload,
+  TAssignmentActionPayload,
+  TSubmitAssignmentPayload,
+} from "@/type";
 
 export const getOpenAssignments = () => {
   // searchTerm=&page=1&limit=10&sortBy=createdAt&sortOrder=desc
@@ -29,32 +33,20 @@ export const getMyAssignments = () => {
   return apiClient("/assignment/my-assignments");
 };
 
-export const submitAssignment = (
-  assignmentId: string,
-  { attachment, status }: { attachment: File; status: "SUBMITTED" },
-) => {
+export const submitAssignment = ({
+  assignmentId,
+  attachment,
+  status,
+}: TSubmitAssignmentPayload) => {
   const formData = new FormData();
-  formData.append("body", JSON.stringify(status));
+  formData.append("body", JSON.stringify({ status }));
   formData.append("attachment", attachment);
-  console.log(formData);
   return apiClient(`/assignment/${assignmentId}/submit`, {
     method: "POST",
     body: formData,
   });
 };
 
-type AssignmentStatus =
-  | "IN_PROGRESS"
-  | "UNDER_REVIEW"
-  | "COMPLETED"
-  | "CANCELLED"
-  | "REJECTED"
-  | "DISPUTED";
-type TAssignmentActionPayload = {
-  assignmentId: string;
-  status: AssignmentStatus;
-  reason?: string;
-};
 export const assignmentAction = ({
   assignmentId,
   status,

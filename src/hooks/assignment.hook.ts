@@ -1,10 +1,11 @@
 import {
+  assignmentAction,
   getAssignmentById,
   getMyAssignments,
   getOpenAssignments,
   postAssignment,
   submitAssignment,
-} from "@/api/assignment.api";
+} from "@/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useCreateAssignment = () => {
@@ -23,14 +24,14 @@ export const useGetOpenAssignments = () => {
 export const useGetMyAssignments = () => {
   return useQuery({
     queryKey: ["my-assignments"],
-    queryFn: () => getMyAssignments(),
+    queryFn: () => getMyAssignments,
   });
 };
 
 export const useGetAssignmentById = (assignmentId: string) => {
   return useQuery({
     queryKey: ["assignment", assignmentId],
-    queryFn: () => getAssignmentById(assignmentId),
+    queryFn: () => getAssignmentById,
   });
 };
 
@@ -39,7 +40,16 @@ export const useSubmitAssignment = () => {
   return useMutation({
     mutationFn: submitAssignment,
     onSuccess: () => {
-      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ["my-assignments"] });
+    },
+  });
+};
+
+export const useAssignmentAction = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: assignmentAction,
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-assignments"] });
     },
   });
