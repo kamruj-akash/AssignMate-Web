@@ -1,3 +1,3 @@
-export default function MyBidsPage() {
-  return <div>My Bids</div>;
+export default function BidsManagementPage() {
+  return <div>Bids Management</div>;
 }

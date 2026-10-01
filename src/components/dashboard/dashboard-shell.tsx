@@ -25,7 +25,7 @@ export default function DashboardShell({
             className="mr-2 data-[orientation=vertical]:h-4"
           />
         </header>
-        {children}
+        <div className="p-4">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );
