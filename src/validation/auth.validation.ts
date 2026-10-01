@@ -24,16 +24,24 @@ export const studentVerifyZodSchema = z.object({
   otp: z.string().length(6, "otp must be 6 characters long"),
 });
 
-export const expertVerifyZodSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  otp: z.string().length(6, "otp must be 6 characters long"),
-});
+export const expertVerifyZodSchema = z
+  .object({
+    email: z.string().email("Invalid email address"),
+    otp: z.string().length(6, "otp must be 6 characters long"),
+    university: z.string().min(3, "University is required"),
+    department: z.string().min(3, "Department is required"),
+    ratePerAssignment: z
+      .number()
+      .min(100, "Rate per assignment must be at least 100"),
+    bio: z.string().min(10, "Bio must be at least 10 characters long"),
+  })
 
-/** {
-  "email": "{{expertEmail}}",
-  "otp": "670643",
-  "university": "University of Dhaka",
-  "department": "Computer Science",
-  "ratePerAssignment": 1500,
-  "bio": "5 years of tutoring experience in algorithms and databases."
+
+/**{
+  "otp": "111111",
+  "email": "nywomykola@mailinator.com",
+  "university": "Eius fugit natus co",
+  "department": "In suscipit sit fac",
+  "ratePerAssignment": 27,
+  "bio": "Adipisicing sequi qu"
 } */

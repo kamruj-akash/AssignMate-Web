@@ -26,13 +26,5 @@ export interface IVerifyExpertRegisterPayload extends IVerifyRegisterPayload {
   department: string;
   ratePerAssignment: number;
   bio: string;
+  documents: FileList;
 }
-
-/** {
-  "email": "{{expertEmail}}",
-  "otp": "670643",
-  "university": "University of Dhaka",
-  "department": "Computer Science",
-  "ratePerAssignment": 1500,
-  "bio": "5 years of tutoring experience in algorithms and databases."
-} */

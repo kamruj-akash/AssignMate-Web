@@ -14,7 +14,9 @@ import { useForm } from "@tanstack/react-form";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Field, FieldError } from "../ui/field";
+import { Field, FieldError, FieldLabel } from "../ui/field";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 import { toast } from "../ui/toast";
 
 export function VerifyForm({
@@ -25,26 +27,53 @@ export function VerifyForm({
   role: "STUDENT" | "EXPERT";
 }) {
   const router = useRouter();
-  const { mutate: verifyRegister, isPending } = useVerifyRegister();
+  const { mutate: verifyStudentRegister, isPending: isPendingStudent } =
+    useVerifyRegister();
+  const { mutate: verifyExpertRegister, isPending: isPendingExpert } =
+    useVerifyRegister();
+  const expertFields =
+    role === "EXPERT"
+      ? {
+          university: "",
+          department: "",
+          ratePerAssignment: 0,
+          bio: "",
+        }
+      : {};
+
   const form = useForm({
     defaultValues: {
       otp: "",
       email: email,
+      ...expertFields,
     },
     validators: {
       onSubmit:
         role === "STUDENT" ? studentVerifyZodSchema : expertVerifyZodSchema,
     },
     onSubmit: ({ value }) => {
-      verifyRegister(value, {
-        onSuccess: () => {
-          toast.add({
-            title: "Account verified successfully",
-            type: "success",
-          });
-          router.push(`/login?email=${value.email}`);
-        },
-      });
+      if (role === "STUDENT") {
+        verifyStudentRegister(value, {
+          onSuccess: () => {
+            toast.add({
+              title: "Account verified successfully",
+              type: "success",
+            });
+            router.push(`/login?email=${value.email}`);
+          },
+        });
+      } else if (role === "EXPERT") {
+        console.log(value);
+        // verifyExpertRegister(value, {
+        //   onSuccess: () => {
+        //     toast.add({
+        //       title: "Account verified successfully",
+        //       type: "success",
+        //     });
+        //     router.push(`/login?email=${value.email}`);
+        //   },
+        // });
+      }
     },
   });
 
@@ -112,13 +141,104 @@ export function VerifyForm({
         </form.Field>
       </div>
 
+      {/* field for Expert Verification */}
+      {role === "EXPERT" && (
+        <>
+          <form.Field name="university">
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+              return (
+                <Field>
+                  <FieldLabel htmlFor={field.name}>University</FieldLabel>
+                  <Input
+                    placeholder="e.g. University of Dhaka"
+                    className={`h-10 ${isInvalid ? "border-destructive" : ""}`}
+                    id={field.name}
+                    type={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              );
+            }}
+          </form.Field>
+          <form.Field name="department">
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+              return (
+                <Field>
+                  <FieldLabel htmlFor={field.name}>Department</FieldLabel>
+                  <Input
+                    placeholder="e.g. Computer Science"
+                    className={`h-10 ${isInvalid ? "border-destructive" : ""}`}
+                    id={field.name}
+                    type={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              );
+            }}
+          </form.Field>
+          <form.Field name="ratePerAssignment">
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+              return (
+                <Field>
+                  <FieldLabel htmlFor={field.name}>
+                    Rate per Assignment
+                  </FieldLabel>
+                  <Input
+                    placeholder="e.g. ৳50"
+                    className={`h-10 ${isInvalid ? "border-destructive" : ""}`}
+                    id={field.name}
+                    type="number"
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(Number(e.target.value))}
+                  />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              );
+            }}
+          </form.Field>
+          <form.Field name="bio">
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+              return (
+                <Field>
+                  <FieldLabel htmlFor={field.name}>Bio</FieldLabel>
+                  <Textarea
+                    placeholder="e.g. 5 years of tutoring experience in algorithms and databases."
+                    className={`h-10 ${isInvalid ? "border-destructive" : ""}`}
+                    id={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              );
+            }}
+          </form.Field>
+        </>
+      )}
+
       <Button
         type="submit"
         size="lg"
         className="w-full"
         disabled={form.state.isSubmitting}
       >
-        {isPending ? (
+        {isPendingStudent || isPendingExpert ? (
           <>
             <Loader2 className="animate-spin" /> Verifying...
           </>

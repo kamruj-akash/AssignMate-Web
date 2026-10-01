@@ -2,6 +2,7 @@ import apiClient from "@/lib/apiClient";
 import {
   ILoginPayload,
   IRegisterPayload,
+  IVerifyExpertRegisterPayload,
   IVerifyRegisterPayload,
 } from "@/type";
 
@@ -47,6 +48,13 @@ export const userRegister = (payload: IRegisterPayload) => {
 
 export const verifyRegister = (payload: IVerifyRegisterPayload) => {
   return apiClient("/auth/verify-register", {
+    method: "POST",
+    body: payload,
+  });
+};
+
+export const verifyExpertRegister = (payload: IVerifyExpertRegisterPayload) => {
+  return apiClient("/expert/verify", {
     method: "POST",
     body: payload,
   });
