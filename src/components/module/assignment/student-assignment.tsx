@@ -5,6 +5,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDebounce } from "@/hooks/debounce.hook";
 import { IAssignmentQueryParams, TStudentAssignmentStatus } from "@/type";
 import { Suspense, useState } from "react";
+import CreateAssignmentDialog from "./create-assignment-dialog";
 import CreateAssignmentTable from "./create-assignment-table";
 import CreateAssignmentTableSkeleton from "./create-assignment-table-skeleton";
 
@@ -51,7 +52,7 @@ export default function StudentAssignmentTable() {
             setPage(1);
           }}
         />
-        {/* <CreateAssignmentDialog /> */}
+        <CreateAssignmentDialog />
       </div>
       <TabsList className="mb-4">
         {assignmentTabs.map((tab) => (
