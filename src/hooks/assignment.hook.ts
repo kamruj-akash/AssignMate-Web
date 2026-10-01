@@ -1,5 +1,6 @@
 import {
   assignmentAction,
+  deleteAssignment,
   getAssignmentById,
   getMyAssignments,
   getOpenAssignments,
@@ -66,6 +67,16 @@ export const useAssignmentAction = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: assignmentAction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-assignments"] });
+    },
+  });
+};
+
+export const useDeleteAssignment = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteAssignment,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-assignments"] });
     },

@@ -66,3 +66,9 @@ export const assignmentAction = ({
     body: { status, reason },
   });
 };
+
+export const deleteAssignment = (assignmentId: string) => {
+  return apiClient(`/assignment/${assignmentId}/delete`, {
+    method: "DELETE",
+  });
+};

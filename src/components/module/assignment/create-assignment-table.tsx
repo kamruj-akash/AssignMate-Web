@@ -9,7 +9,11 @@ import {
 } from "@/components/ui/table";
 import TablePagination from "@/components/ui/tablePagination";
 import { toast } from "@/components/ui/toast";
-import { useAssignmentAction, useSuspendedGetMyAssignments } from "@/hooks";
+import {
+  useAssignmentAction,
+  useDeleteAssignment,
+  useSuspendedGetMyAssignments,
+} from "@/hooks";
 import {
   AssignmentStatus,
   IAssignment,
@@ -18,7 +22,8 @@ import {
 } from "@/type";
 import { cn } from "cn";
 import { format } from "date-fns";
-import { FileText, Paperclip } from "lucide-react";
+import { Paperclip } from "lucide-react";
+import Link from "next/link";
 
 const statusStyles: Record<TStudentAssignmentStatus, string> = {
   OPEN: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
@@ -108,7 +113,7 @@ export default function CreateAssignmentTable({
                 {currencyFormatter.format(Number(assignment.budget))}
               </TableCell>
               <TableCell className="text-right">
-                <Button variant="ghost">{assignment._count.bids}</Button>
+                {assignment._count.bids}
               </TableCell>
               <TableCell className="text-right">
                 <span
@@ -142,20 +147,24 @@ export default function CreateAssignmentTable({
           ))}
         </TableBody>
       </Table>
-      <TablePagination setPage={setPage} totalPages={totalPage} />
+      {totalPage > 1 && (
+        <TablePagination setPage={setPage} totalPages={totalPage} />
+      )}
     </>
   );
 }
 
 function AssignmentActions({ assignment }: { assignment: IAssignment }) {
-  const { mutate, isPending, variables } = useAssignmentAction();
-
-  const handleAction = (status: AssignmentStatus, successMessage: string) => {
-    mutate(
+  const { mutate: changeAction, isPending } = useAssignmentAction();
+  const { mutate: deleteAssignment, isPending: isDeleting } =
+    useDeleteAssignment();
+  //
+  const handleAction = (status: AssignmentStatus) => {
+    changeAction(
       { assignmentId: assignment.id, status },
       {
-        onSuccess: () => {
-          toast.add({ title: successMessage, type: "success" });
+        onSuccess: (res) => {
+          toast.add({ title: res.message, type: "success" });
         },
         onError: (err) => {
           toast.add({
@@ -167,15 +176,31 @@ function AssignmentActions({ assignment }: { assignment: IAssignment }) {
     );
   };
 
+  const handleDelete = (id: string) => {
+    deleteAssignment(id, {
+      onSuccess: (res) => {
+        toast.add({
+          title: res.message || "Assignment deleted",
+          type: "success",
+        });
+      },
+      onError: (err) => {
+        toast.add({
+          title: err.message || "Something went wrong",
+          type: "error",
+        });
+      },
+    });
+  };
+
   return (
     <div className="flex items-center justify-end gap-1">
       {assignment.submissionUrl && (
         <Button
-          variant="ghost"
-          size="icon-sm"
+          variant="default"
           title="View submission"
           render={
-            <a
+            <Link
               href={assignment.submissionUrl.url}
               target="_blank"
               rel="noopener noreferrer"
@@ -183,31 +208,30 @@ function AssignmentActions({ assignment }: { assignment: IAssignment }) {
           }
           nativeButton={false}
         >
-          <FileText />
+          View Submission
         </Button>
       )}
       {assignment.status === "SUBMITTED" && (
         <Button
           size="sm"
           disabled={isPending}
-          onClick={() => handleAction("COMPLETED", "Assignment approved")}
+          onClick={() => handleAction("COMPLETED")}
         >
-          {isPending && variables?.status === "COMPLETED"
-            ? "Approving..."
-            : "Approve"}
+          {isPending ? "Approving..." : "Approve"}
         </Button>
       )}
       {assignment.status === "OPEN" && (
-        <Button
-          variant="destructive"
-          size="sm"
-          disabled={isPending}
-          onClick={() => handleAction("CANCELLED", "Assignment cancelled")}
-        >
-          {isPending && variables?.status === "CANCELLED"
-            ? "Cancelling..."
-            : "Cancel"}
-        </Button>
+        <>
+          <Button size="sm">View Bids</Button>
+          <Button
+            variant="destructive"
+            size="sm"
+            disabled={isDeleting}
+            onClick={() => handleDelete(assignment.id)}
+          >
+            {isDeleting ? "Deleting..." : "Delete"}
+          </Button>
+        </>
       )}
     </div>
   );
