@@ -9,9 +9,10 @@ import CreateAssignmentTable from "./create-assignment-table";
 import CreateAssignmentTableSkeleton from "./create-assignment-table-skeleton";
 
 const assignmentTabs: (TStudentAssignmentStatus | "ALL")[] = [
+  "ALL",
   "OPEN",
-  "ASSIGNED",
   "AWAITING_PAYMENT",
+  "ASSIGNED",
   "IN_PROGRESS",
   "SUBMITTED",
   "UNDER_REVIEW",
@@ -21,13 +22,13 @@ const assignmentTabs: (TStudentAssignmentStatus | "ALL")[] = [
 ];
 
 export default function StudentAssignmentTable() {
-  const [tab, setTab] = useState<TStudentAssignmentStatus | "OPEN">("OPEN");
+  const [tab, setTab] = useState<TStudentAssignmentStatus | "ALL">("ALL");
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const queryParams: IAssignmentQueryParams = {
-    status: tab === "OPEN" ? undefined : tab,
+    status: tab === "ALL" ? undefined : tab,
     page: page,
     searchTerm: debouncedSearchTerm,
   };
@@ -37,6 +38,7 @@ export default function StudentAssignmentTable() {
       value={tab}
       onValueChange={(value) => {
         setTab(value as TStudentAssignmentStatus | "OPEN");
+        setPage(1);
       }}
     >
       <div className="flex items-center justify-between mb-4">
@@ -46,14 +48,14 @@ export default function StudentAssignmentTable() {
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
-            // setPage(1);
+            setPage(1);
           }}
         />
-        {/* <CreateScheduleDialog /> */}
+        {/* <CreateAssignmentDialog /> */}
       </div>
       <TabsList className="mb-4">
         {assignmentTabs.map((tab) => (
-          <TabsTrigger key={tab} value={tab}>
+          <TabsTrigger className={"cursor-pointer"} key={tab} value={tab}>
             {tab}
           </TabsTrigger>
         ))}

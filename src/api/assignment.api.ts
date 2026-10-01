@@ -1,9 +1,10 @@
 import apiClient from "@/lib/apiClient";
 import {
+  IAssignment,
+  IAssignmentQueryParams,
   ICreateAssignmentPayload,
-  IQueryParams,
+  IPaginatedResponse,
   TAssignmentActionPayload,
-  TStudentAssignmentStatus,
   TSubmitAssignmentPayload,
 } from "@/type";
 
@@ -30,14 +31,15 @@ export const getAssignmentById = (assignmentId: string) => {
   return apiClient(`/assignment/${assignmentId}/get`);
 };
 
-export const getMyAssignments = (
-  params: IQueryParams<TStudentAssignmentStatus | "ALL">,
-) => {
+export const getMyAssignments = (params?: IAssignmentQueryParams) => {
   // searchTerm=&status=ASSIGNED&page=1&limit=10&sortBy=createdAt&sortOrder=desc
-  return apiClient("/assignment/my-assignments", {
-    method: "GET",
-    params,
-  });
+  return apiClient<IPaginatedResponse<IAssignment>>(
+    "/assignment/my-assignments",
+    {
+      method: "GET",
+      params,
+    },
+  );
 };
 
 export const submitAssignment = ({
@@ -49,7 +51,7 @@ export const submitAssignment = ({
   formData.append("body", JSON.stringify({ status }));
   formData.append("attachment", attachment);
   return apiClient(`/assignment/${assignmentId}/submit`, {
-    method: "POST",
+    method: "PATCH",
     body: formData,
   });
 };
@@ -60,7 +62,7 @@ export const assignmentAction = ({
   reason,
 }: TAssignmentActionPayload) => {
   return apiClient(`/assignment/${assignmentId}/action`, {
-    method: "POST",
+    method: "PATCH",
     body: { status, reason },
   });
 };

@@ -43,3 +43,39 @@ export interface IAssignmentQueryParams {
   status?: TStudentAssignmentStatus | "OPEN";
   searchTerm?: string;
 }
+
+export interface IAssignment {
+  id: string;
+  studentId: string;
+  title: string;
+  description: string;
+  attachmentUrl: string | null;
+  budget: string;
+  deadline: string;
+  status: TStudentAssignmentStatus;
+  assignedExpertId: string | null;
+  submissionUrl: { url: string; publicId: string } | null;
+  disputedReason: string | null;
+  acceptedBidId: string | null;
+  createdAt: string;
+  updatedAt: string;
+  assignedExpert: {
+    id: string;
+    university: string;
+    department: string;
+    user: { name: string; email: string };
+  } | null;
+  _count: { bids: number };
+}
+
+export interface IPaginatedResponse<T> {
+  success: boolean;
+  message?: string;
+  data: T[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
