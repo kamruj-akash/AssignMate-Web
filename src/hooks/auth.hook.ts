@@ -1,4 +1,4 @@
-import { getMe, googleLogin, userLogin } from "@/api";
+import { getMe, googleLogin, userLogin, userRegister } from "@/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useLogin = () => {
@@ -21,8 +21,12 @@ export const useGetMe = () => {
 };
 
 export const useGoogleLogin = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: googleLogin,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["me"] });
+    },
   });
 };
 
@@ -40,4 +44,10 @@ export const useAuth = () => {
     isLoginLoading,
     isGoogleLoginLoading,
   };
+};
+
+export const useUserRegister = () => {
+  return useMutation({
+    mutationFn: userRegister,
+  });
 };

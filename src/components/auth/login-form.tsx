@@ -29,6 +29,7 @@ export function LoginForm() {
   const { login, isLoginLoading, getUser, googleLogin, isGoogleLoginLoading } =
     useAuth();
   const router = useRouter();
+  const isAnyLoading = isLoginLoading || isGoogleLoginLoading;
 
   const form = useForm({
     defaultValues: {
@@ -59,21 +60,22 @@ export function LoginForm() {
   });
 
   const handleDemoLogin = (account: (typeof DEMO_ACCOUNTS)[number]) => {
+    if (isAnyLoading) return;
     form.setFieldValue("email", account.email);
     form.setFieldValue("password", account.password);
     form.handleSubmit();
   };
 
   const handleGoogleLogin = (credentialResponse: IGoogleResponse) => {
+    if (isAnyLoading) return;
     const googleIdToken = credentialResponse.credential;
     googleLogin(googleIdToken, {
-      onSuccess: (res) => {
+      onSuccess: () => {
         toast.add({
           title: "Login successful",
           type: "success",
         });
-        console.log(res);
-        // router.push(`/dashboard/${res.data.role.toLowerCase()}`);
+        router.push(`/dashboard/${getUser.role.toLowerCase()}`);
       },
       onError: (err) => {
         toast.add({
@@ -119,6 +121,7 @@ export function LoginForm() {
             );
           }}
         </form.Field>
+
         <form.Field name="password">
           {(field) => {
             const isInvalid =
@@ -147,7 +150,7 @@ export function LoginForm() {
           }}
         </form.Field>
         <Button
-          disabled={isLoginLoading}
+          disabled={isAnyLoading}
           type="submit"
           size="lg"
           className="w-full"
@@ -165,19 +168,35 @@ export function LoginForm() {
           Or continue with
           <span className="h-px flex-1 bg-border" />
         </div>
-        <div className="flex justify-center">
-          <GoogleLogin
-            size="large"
-            shape="rectangular"
-            text="continue_with"
-            width="400"
-            onSuccess={(credentialResponse) => {
-              handleGoogleLogin(credentialResponse as IGoogleResponse);
-            }}
-            onError={() => {
-              console.log("Login Failed");
-            }}
-          />
+        <div className="relative flex justify-center">
+          <div
+            className={
+              isGoogleLoginLoading ? "pointer-events-none opacity-0" : ""
+            }
+            aria-hidden={isGoogleLoginLoading}
+          >
+            <GoogleLogin
+              size="large"
+              shape="rectangular"
+              text="continue_with"
+              width="400"
+              onSuccess={(credentialResponse) => {
+                handleGoogleLogin(credentialResponse as IGoogleResponse);
+              }}
+              onError={() => {
+                toast.add({
+                  title: "Google sign-in failed",
+                  type: "error",
+                });
+              }}
+            />
+          </div>
+          {isGoogleLoginLoading && (
+            <div className="absolute inset-0 flex items-center justify-center gap-2 text-sm font-medium">
+              <Loader className="size-4 animate-spin" /> Signing in with
+              Google...
+            </div>
+          )}
         </div>
         <div className="flex items-center gap-3 text-xs uppercase text-muted-foreground">
           <span className="h-px flex-1 bg-border" />
@@ -190,7 +209,7 @@ export function LoginForm() {
               key={account.label}
               type="button"
               variant="outline"
-              disabled={isLoginLoading}
+              disabled={isAnyLoading}
               onClick={() => handleDemoLogin(account)}
             >
               {account.label}

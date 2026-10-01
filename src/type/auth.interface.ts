@@ -8,3 +8,10 @@ export interface IGoogleResponse {
   clientId: string;
   select_by: string;
 }
+
+export interface IRegisterPayload {
+  name: string;
+  email: string;
+  password: string;
+  role: "STUDENT" | "EXPERT";
+}

@@ -21,7 +21,7 @@ export default async function RegisterPage({
           It takes a minute — no card required.
         </p>
       </div>
-      <RegisterForm defaultRole={role === "expert" ? "expert" : "student"} />
+      <RegisterForm defaultRole={role === "expert" ? "EXPERT" : "STUDENT"} />
       <p className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}
         <Link
