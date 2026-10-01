@@ -8,12 +8,14 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 
-import { useVerifyRegister } from "@/hooks";
+import { useVerifyExpertRegister, useVerifyRegister } from "@/hooks";
+import { IVerifyExpertRegisterPayload } from "@/type";
 import { expertVerifyZodSchema, studentVerifyZodSchema } from "@/validation";
 import { useForm } from "@tanstack/react-form";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { FileDropzone } from "../shared/file-dropzone";
 import { Field, FieldError, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
@@ -30,7 +32,7 @@ export function VerifyForm({
   const { mutate: verifyStudentRegister, isPending: isPendingStudent } =
     useVerifyRegister();
   const { mutate: verifyExpertRegister, isPending: isPendingExpert } =
-    useVerifyRegister();
+    useVerifyExpertRegister();
   const expertFields =
     role === "EXPERT"
       ? {
@@ -38,6 +40,7 @@ export function VerifyForm({
           department: "",
           ratePerAssignment: 0,
           bio: "",
+          documents: [] as File[],
         }
       : {};
 
@@ -54,25 +57,37 @@ export function VerifyForm({
     onSubmit: ({ value }) => {
       if (role === "STUDENT") {
         verifyStudentRegister(value, {
-          onSuccess: () => {
+          onSuccess: (res) => {
             toast.add({
-              title: "Account verified successfully",
+              title: res.message ?? "Account verified successfully",
               type: "success",
             });
             router.push(`/login?email=${value.email}`);
           },
+          onError: (error) => {
+            toast.add({
+              title: error.message ?? "Failed to verify account",
+              type: "error",
+            });
+          },
         });
       } else if (role === "EXPERT") {
-        console.log(value);
-        // verifyExpertRegister(value, {
-        //   onSuccess: () => {
-        //     toast.add({
-        //       title: "Account verified successfully",
-        //       type: "success",
-        //     });
-        //     router.push(`/login?email=${value.email}`);
-        //   },
-        // });
+        verifyExpertRegister(value as IVerifyExpertRegisterPayload, {
+          onSuccess: (res) => {
+            toast.add({
+              title: res.message ?? "Account verified successfully",
+              type: "success",
+            });
+            router.push(`/login?email=${value.email}`);
+          },
+          onError: (error) => {
+            console.log(error);
+            toast.add({
+              title: error.message ?? "Failed to verify account",
+              type: "error",
+            });
+          },
+        });
       }
     },
   });
@@ -103,7 +118,9 @@ export function VerifyForm({
                   onChange={(e) => {
                     field.handleChange(e);
                   }}
-                  onComplete={form.handleSubmit}
+                  onComplete={
+                    role === "STUDENT" ? form.handleSubmit : undefined
+                  }
                   containerClassName="justify-center"
                   aria-invalid={isInvalid}
                 >
@@ -155,7 +172,6 @@ export function VerifyForm({
                     placeholder="e.g. University of Dhaka"
                     className={`h-10 ${isInvalid ? "border-destructive" : ""}`}
                     id={field.name}
-                    type={field.name}
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
@@ -176,7 +192,6 @@ export function VerifyForm({
                     placeholder="e.g. Computer Science"
                     className={`h-10 ${isInvalid ? "border-destructive" : ""}`}
                     id={field.name}
-                    type={field.name}
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
@@ -223,6 +238,29 @@ export function VerifyForm({
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              );
+            }}
+          </form.Field>
+          <form.Field name="documents">
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+              return (
+                <Field>
+                  <FieldLabel htmlFor={field.name}>
+                    Verification documents
+                  </FieldLabel>
+                  <FileDropzone
+                    id={field.name}
+                    value={field.state.value ?? []}
+                    onChange={field.handleChange}
+                    onBlur={field.handleBlur}
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    hint="PDF, JPG or PNG · up to 5 files · 5MB each"
+                    invalid={isInvalid}
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>

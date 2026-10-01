@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+const MAX_DOCUMENT_SIZE = 5 * 1024 * 1024;
+const ACCEPTED_DOCUMENT_TYPES = ["application/pdf", "image/jpeg", "image/png"];
+
 export const loginZodSchema = z.object({
   email: z.email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters long"),
@@ -34,7 +37,20 @@ export const expertVerifyZodSchema = z
       .number()
       .min(100, "Rate per assignment must be at least 100"),
     bio: z.string().min(10, "Bio must be at least 10 characters long"),
-  })
+    documents: z
+      .array(z.instanceof(File))
+      .min(1, "Please upload at least one document")
+      .max(5, "You can upload up to 5 documents")
+      .refine(
+        (files) => files.every((file) => file.size <= MAX_DOCUMENT_SIZE),
+        "Each file must be 5MB or smaller",
+      )
+      .refine(
+        (files) =>
+          files.every((file) => ACCEPTED_DOCUMENT_TYPES.includes(file.type)),
+        "Only PDF, JPG or PNG files are allowed",
+      ),
+  });
 
 
 /**{

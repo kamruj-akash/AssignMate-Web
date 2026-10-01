@@ -26,5 +26,5 @@ export interface IVerifyExpertRegisterPayload extends IVerifyRegisterPayload {
   department: string;
   ratePerAssignment: number;
   bio: string;
-  documents: FileList;
+  documents: File[];
 }

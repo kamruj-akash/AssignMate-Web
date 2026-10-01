@@ -53,9 +53,16 @@ export const verifyRegister = (payload: IVerifyRegisterPayload) => {
   });
 };
 
-export const verifyExpertRegister = (payload: IVerifyExpertRegisterPayload) => {
+export const verifyExpertRegister = ({
+  documents,
+  ...data
+}: IVerifyExpertRegisterPayload) => {
+  const formData = new FormData();
+  formData.append("body", JSON.stringify(data));
+  documents.forEach((file) => formData.append("documents", file));
+
   return apiClient("/expert/verify", {
     method: "POST",
-    body: payload,
+    body: formData,
   });
 };
