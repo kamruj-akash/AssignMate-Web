@@ -47,7 +47,7 @@ export function LoginForm() {
             type: "success",
           });
           router.push(
-            `/dashboard/${res?.data?.role ? res?.data?.role.toLowerCase() : "student"}`,
+            `/${res?.data?.role ? res?.data?.role.toLowerCase() : "student"}`,
           );
         },
         onError: (err) => {
@@ -78,7 +78,7 @@ export function LoginForm() {
           type: "success",
         });
         router.push(
-          `/dashboard/${res?.data?.role ? res?.data?.role.toLowerCase() : "student"}`,
+          `/${res?.data?.role ? res?.data?.role.toLowerCase() : "student"}`,
         );
       },
       onError: (err) => {

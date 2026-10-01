@@ -14,7 +14,7 @@ export function AuthButtons({ hasSession }: { hasSession: boolean }) {
       <Button
         size="sm"
         nativeButton={false}
-        render={<Link href={`/dashboard/${user.data.role.toLowerCase()}`} />}
+        render={<Link href={`/${user.data.role.toLowerCase()}`} />}
       >
         Dashboard
       </Button>

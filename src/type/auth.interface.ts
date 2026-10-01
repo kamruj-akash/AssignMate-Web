@@ -1,3 +1,5 @@
+export type UserRole = "ADMIN" | "STUDENT" | "EXPERT";
+
 export interface ILoginPayload {
   email: string;
   password: string;

@@ -1,3 +1,7 @@
+import AuthGuard from "@/components/auth/auth-guard";
+
 export default function layout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <AuthGuard roles={["ADMIN", "EXPERT", "STUDENT"]}>{children}</AuthGuard>
+  );
 }
