@@ -3,7 +3,7 @@ export interface ICreateAssignmentPayload {
   description: string;
   budget: number;
   deadline: Date;
-  attachment: File;
+  attachment?: File;
 }
 
 export type TSubmitAssignmentPayload = {

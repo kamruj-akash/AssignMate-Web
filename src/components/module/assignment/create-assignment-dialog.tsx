@@ -3,11 +3,13 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import CreateAssignmentForm from "./create-assignment-form";
 
 export default function CreateAssignmentDialog() {
   const [open, setOpen] = useState(false);
@@ -18,16 +20,17 @@ export default function CreateAssignmentDialog() {
         Create Assignment
       </DialogTrigger>
 
-      <DialogContent>
-        <DialogTitle className="text-lg font-semibold">
-          Create Assignment
-        </DialogTitle>
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-xl">
+        <DialogHeader>
+          <DialogTitle className="text-lg font-semibold">
+            Create Assignment
+          </DialogTitle>
+          <DialogDescription>
+            Post a new assignment for experts to bid on.
+          </DialogDescription>
+        </DialogHeader>
 
-        <DialogDescription className="mt-2 text-sm text-muted-foreground">
-          Create a new assignment .
-        </DialogDescription>
-
-        {/* <CreateScheduleForm setOpen={setOpen} /> */}
+        <CreateAssignmentForm setOpen={setOpen} />
       </DialogContent>
     </Dialog>
   );

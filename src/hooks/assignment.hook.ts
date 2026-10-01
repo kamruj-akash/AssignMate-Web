@@ -15,8 +15,12 @@ import {
 } from "@tanstack/react-query";
 
 export const useCreateAssignment = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: postAssignment,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-assignments"] });
+    },
   });
 };
 

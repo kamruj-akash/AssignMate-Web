@@ -19,7 +19,7 @@ export const postAssignment = ({
 }: ICreateAssignmentPayload) => {
   const formData = new FormData();
   formData.append("body", JSON.stringify(data));
-  formData.append("attachment", attachment);
+  if (attachment) formData.append("attachment", attachment);
 
   return apiClient("/assignment/create", {
     method: "POST",
