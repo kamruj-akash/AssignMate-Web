@@ -14,6 +14,7 @@ import { registerZodSchema } from "@/validation";
 import { useForm } from "@tanstack/react-form";
 import { GraduationCap, type LucideIcon, PenTool } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "../ui/toast";
 import { PasswordInput } from "./password-input";
@@ -48,6 +49,7 @@ export function RegisterForm({
   const [role, setRole] = useState<RegisterRole>(defaultRole);
   const { mutate: registerUser, isPending: isRegisterLoading } =
     useUserRegister();
+  const router = useRouter();
 
   const form = useForm({
     defaultValues: {
@@ -73,6 +75,7 @@ export function RegisterForm({
               "Success, Please Provide OTP to verify your account",
             type: "success",
           });
+          router.push(`/verify?email=${value.email}&role=${role}`);
         },
       });
     },

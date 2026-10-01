@@ -18,3 +18,22 @@ export const registerZodSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+export const studentVerifyZodSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  otp: z.string().length(6, "otp must be 6 characters long"),
+});
+
+export const expertVerifyZodSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  otp: z.string().length(6, "otp must be 6 characters long"),
+});
+
+/** {
+  "email": "{{expertEmail}}",
+  "otp": "670643",
+  "university": "University of Dhaka",
+  "department": "Computer Science",
+  "ratePerAssignment": 1500,
+  "bio": "5 years of tutoring experience in algorithms and databases."
+} */

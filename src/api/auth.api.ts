@@ -1,5 +1,9 @@
 import apiClient from "@/lib/apiClient";
-import { ILoginPayload, IRegisterPayload } from "@/type";
+import {
+  ILoginPayload,
+  IRegisterPayload,
+  IVerifyRegisterPayload,
+} from "@/type";
 
 export const userLogin = (payload: ILoginPayload) => {
   return apiClient("/auth/login", {
@@ -36,6 +40,13 @@ export const userRegister = (payload: IRegisterPayload) => {
   }
 
   return apiClient(endpoint, {
+    method: "POST",
+    body: payload,
+  });
+};
+
+export const verifyRegister = (payload: IVerifyRegisterPayload) => {
+  return apiClient("/auth/verify-register", {
     method: "POST",
     body: payload,
   });
