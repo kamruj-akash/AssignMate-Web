@@ -70,8 +70,8 @@ export const studentRoutes: SidebarRoute[] = [
         url: "/student",
       },
       {
-        title: "Assignment Management",
-        url: "/student/assignment-management",
+        title: "Assignments",
+        url: "/student/assignments",
       },
       {
         title: "Payments",
