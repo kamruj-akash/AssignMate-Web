@@ -1,7 +1,9 @@
 import apiClient from "@/lib/apiClient";
 import {
   ICreateAssignmentPayload,
+  IQueryParams,
   TAssignmentActionPayload,
+  TStudentAssignmentStatus,
   TSubmitAssignmentPayload,
 } from "@/type";
 
@@ -28,9 +30,14 @@ export const getAssignmentById = (assignmentId: string) => {
   return apiClient(`/assignment/${assignmentId}/get`);
 };
 
-export const getMyAssignments = () => {
+export const getMyAssignments = (
+  params: IQueryParams<TStudentAssignmentStatus | "ALL">,
+) => {
   // searchTerm=&status=ASSIGNED&page=1&limit=10&sortBy=createdAt&sortOrder=desc
-  return apiClient("/assignment/my-assignments");
+  return apiClient("/assignment/my-assignments", {
+    method: "GET",
+    params,
+  });
 };
 
 export const submitAssignment = ({

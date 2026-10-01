@@ -6,7 +6,13 @@ import {
   postAssignment,
   submitAssignment,
 } from "@/api";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { IAssignmentQueryParams } from "@/type";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 
 export const useCreateAssignment = () => {
   return useMutation({
@@ -27,6 +33,13 @@ export const useGetMyAssignments = () => {
     queryFn: () => getMyAssignments,
   });
 };
+
+export function useSuspendedGetMyAssignments(params?: IAssignmentQueryParams) {
+  return useSuspenseQuery({
+    queryKey: ["my-assignments", params],
+    queryFn: () => getMyAssignments(params),
+  });
+}
 
 export const useGetAssignmentById = (assignmentId: string) => {
   return useQuery({
