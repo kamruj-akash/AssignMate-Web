@@ -1,5 +1,5 @@
 import AuthGuard from "@/components/auth/auth-guard";
 
 export default function page() {
-  return <AuthGuard roles={["STUDENT"]}>page</AuthGuard>;
+  return <AuthGuard roles={["EXPERT"]}>Admin</AuthGuard>;
 }

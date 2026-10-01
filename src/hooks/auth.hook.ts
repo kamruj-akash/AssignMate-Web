@@ -1,6 +1,7 @@
 import {
   getMe,
   googleLogin,
+  logout,
   userLogin,
   userRegister,
   verifyExpertRegister,
@@ -65,5 +66,11 @@ export const useVerifyRegister = () => {
 export const useVerifyExpertRegister = () => {
   return useMutation({
     mutationFn: verifyExpertRegister,
+  });
+};
+
+export const useLogout = () => {
+  return useMutation({
+    mutationFn: logout,
   });
 };

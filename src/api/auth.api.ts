@@ -66,3 +66,9 @@ export const verifyExpertRegister = ({
     body: formData,
   });
 };
+
+export const logout = () => {
+  return apiClient("/auth/logout", {
+    method: "POST",
+  });
+};
