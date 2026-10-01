@@ -8,11 +8,14 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useLogin } from "@/hooks";
+import { useAuth } from "@/hooks";
+import { IGoogleResponse } from "@/type";
 import { loginZodSchema } from "@/validation";
+import { GoogleLogin } from "@react-oauth/google";
 import { useForm } from "@tanstack/react-form";
 import { Loader } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "../ui/toast";
 import { PasswordInput } from "./password-input";
 
@@ -23,7 +26,10 @@ const DEMO_ACCOUNTS = [
 ] as const;
 
 export function LoginForm() {
-  const { mutate: handleLogin, isPending } = useLogin();
+  const { login, isLoginLoading, getUser, googleLogin, isGoogleLoginLoading } =
+    useAuth();
+  const router = useRouter();
+
   const form = useForm({
     defaultValues: {
       email: "",
@@ -33,13 +39,13 @@ export function LoginForm() {
       onSubmit: loginZodSchema,
     },
     onSubmit: ({ value }) => {
-      handleLogin(value, {
+      login(value, {
         onSuccess: (res) => {
           toast.add({
             title: "Login successful",
             type: "success",
           });
-          console.log(res);
+          router.push(`/dashboard/${res.data.role.toLowerCase()}`);
         },
         onError: (err) => {
           toast.add({
@@ -57,6 +63,31 @@ export function LoginForm() {
     form.setFieldValue("password", account.password);
     form.handleSubmit();
   };
+
+  const handleGoogleLogin = (credentialResponse: IGoogleResponse) => {
+    const googleIdToken = credentialResponse.credential;
+    googleLogin(googleIdToken, {
+      onSuccess: (res) => {
+        toast.add({
+          title: "Login successful",
+          type: "success",
+        });
+        console.log(res);
+        // router.push(`/dashboard/${res.data.role.toLowerCase()}`);
+      },
+      onError: (err) => {
+        toast.add({
+          title: err.message || "Login failed",
+          type: "error",
+        });
+        console.log(err);
+      },
+    });
+  };
+
+  // if (getUser) {
+  //   router.push(`/dashboard/${getUser.role.toLowerCase()}`);
+  // }
 
   return (
     <form
@@ -115,8 +146,13 @@ export function LoginForm() {
             );
           }}
         </form.Field>
-        <Button disabled={isPending} type="submit" size="lg" className="w-full">
-          {isPending ? (
+        <Button
+          disabled={isLoginLoading}
+          type="submit"
+          size="lg"
+          className="w-full"
+        >
+          {isLoginLoading ? (
             <>
               <Loader className="animate-spin" /> Logging in...
             </>
@@ -124,6 +160,25 @@ export function LoginForm() {
             "Login"
           )}
         </Button>
+        <div className="flex items-center gap-3 text-xs uppercase text-muted-foreground">
+          <span className="h-px flex-1 bg-border" />
+          Or continue with
+          <span className="h-px flex-1 bg-border" />
+        </div>
+        <div className="flex justify-center">
+          <GoogleLogin
+            size="large"
+            shape="rectangular"
+            text="continue_with"
+            width="400"
+            onSuccess={(credentialResponse) => {
+              handleGoogleLogin(credentialResponse as IGoogleResponse);
+            }}
+            onError={() => {
+              console.log("Login Failed");
+            }}
+          />
+        </div>
         <div className="flex items-center gap-3 text-xs uppercase text-muted-foreground">
           <span className="h-px flex-1 bg-border" />
           Or try a demo account
@@ -135,7 +190,7 @@ export function LoginForm() {
               key={account.label}
               type="button"
               variant="outline"
-              disabled={isPending}
+              disabled={isLoginLoading}
               onClick={() => handleDemoLogin(account)}
             >
               {account.label}

@@ -1,6 +1,11 @@
 "use client";
+import GoogleProvider from "./google.provider";
 import QueryProvider from "./query.provider";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-  return <QueryProvider>{children}</QueryProvider>;
+  return (
+    <GoogleProvider>
+      <QueryProvider>{children}</QueryProvider>;
+    </GoogleProvider>
+  );
 }

@@ -11,3 +11,10 @@ export const userLogin = (payload: ILoginPayload) => {
 export const getMe = () => {
   return apiClient("/auth/me");
 };
+
+export const googleLogin = (idToken: string) => {
+  return apiClient("/auth/google-login", {
+    method: "POST",
+    body: { idToken },
+  });
+};
