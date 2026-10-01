@@ -4,6 +4,7 @@ import { useGetMe } from "@/hooks";
 import { UserRole } from "@/type";
 import { useRouter } from "next/navigation";
 import AuthLoading from "./auth-loading";
+import NotAuthorized from "./not-authorized";
 
 export default function AuthGuard({
   children,
@@ -27,5 +28,5 @@ export default function AuthGuard({
   if (isAuthenticated) {
     return <div>{children}</div>;
   }
-  return <div>You are not authorized to access this page.</div>;
+  return <NotAuthorized role={user.role} />;
 }
