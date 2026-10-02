@@ -15,8 +15,8 @@ import {
   formatDistanceToNow,
 } from "date-fns";
 import { CalendarClock, FileSearch, Paperclip, Search } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
+import PlaceBidSheet from "./place-bid-sheet";
 
 const PAGE_LIMIT = 9;
 
@@ -203,13 +203,7 @@ function AssignmentCard({ assignment }: { assignment: IOpenAssignment }) {
         )}
       </div>
 
-      <Button
-        className="mt-5 w-full"
-        nativeButton={false}
-        render={<Link href="/expert/assignments-management" />}
-      >
-        Place a bid
-      </Button>
+      <PlaceBidSheet assignment={assignment} />
     </article>
   );
 }

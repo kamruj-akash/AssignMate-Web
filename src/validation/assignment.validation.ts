@@ -42,3 +42,20 @@ export const createAssignmentZodSchema = z.object({
       "Only PDF, DOC, DOCX, ZIP, JPG or PNG files are allowed",
     ),
 });
+
+export const placeBidZodSchema = z.object({
+  proposedAmount: z
+    .number("Proposed amount is required")
+    .positive("Proposed amount must be greater than 0"),
+  estimatedDelivery: z
+    .date("Estimated delivery is required")
+    .refine(
+      (date) => date.getTime() > Date.now(),
+      "Estimated delivery must be in the future",
+    ),
+  coverNote: z
+    .string()
+    .trim()
+    .min(20, "Cover note must be at least 20 characters long")
+    .max(2000, "Cover note must be at most 2000 characters long"),
+});

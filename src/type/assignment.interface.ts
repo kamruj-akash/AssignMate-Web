@@ -100,3 +100,10 @@ export interface IPaginatedResponse<T> {
     totalPages: number;
   };
 }
+
+export interface IPlaceBidPayload {
+  assignmentId: string;
+  proposedAmount: number;
+  estimatedDelivery: string;
+  coverNote: string;
+}
