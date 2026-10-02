@@ -8,13 +8,7 @@ import {
   submitAssignment,
 } from "@/api";
 import { IAssignmentQueryParams, IOpenAssignmentQueryParams } from "@/type";
-import {
-  keepPreviousData,
-  useMutation,
-  useQuery,
-  useQueryClient,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useCreateAssignment = () => {
   const queryClient = useQueryClient();
@@ -30,28 +24,20 @@ export const useGetOpenAssignments = (params?: IOpenAssignmentQueryParams) => {
   return useQuery({
     queryKey: ["open-assignments", params],
     queryFn: () => getOpenAssignments(params),
-    placeholderData: keepPreviousData,
   });
 };
 
-export const useGetMyAssignments = () => {
+export const useGetMyAssignments = (params?: IAssignmentQueryParams) => {
   return useQuery({
-    queryKey: ["my-assignments"],
-    queryFn: () => getMyAssignments,
-  });
-};
-
-export function useSuspendedGetMyAssignments(params?: IAssignmentQueryParams) {
-  return useSuspenseQuery({
     queryKey: ["my-assignments", params],
     queryFn: () => getMyAssignments(params),
   });
-}
+};
 
 export const useGetAssignmentById = (assignmentId: string) => {
   return useQuery({
     queryKey: ["assignment", assignmentId],
-    queryFn: () => getAssignmentById,
+    queryFn: () => getAssignmentById(assignmentId),
   });
 };
 

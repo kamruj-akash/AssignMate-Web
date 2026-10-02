@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import envConfig from "./config/envConfig";
-import apiClient from "./lib/apiClient";
 
 // const unauthorizedCCount: number = 0;
 
@@ -44,14 +43,14 @@ export async function proxy(request: NextRequest) {
   const cookieStore = await cookies();
 
   const accessToken = cookieStore.get("accessToken")?.value;
-  const refreshToken = cookieStore.get("refreshToken")?.value;
-  if (!accessToken) {
-    // generate a new access token using the refresh token
-    const newAccessToken = await apiClient("/auth/get-new-token", {
-      method: "POST",
-    });
-    console.log(newAccessToken);
-  }
+  // const refreshToken = cookieStore.get("refreshToken")?.value;
+  // if (!accessToken) {
+  //   // generate a new access token using the refresh token
+  //   const newAccessToken = await apiClient("/auth/get-new-token", {
+  //     method: "POST",
+  //   });
+  //   console.log(newAccessToken);
+  // }
 
   const user = verifyToken(accessToken, envConfig.JWT_REFRESH_SECRET);
   // console.log(user)

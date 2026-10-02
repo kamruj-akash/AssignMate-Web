@@ -4,10 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDebounce } from "@/hooks/debounce.hook";
 import { IAssignmentQueryParams, TStudentAssignmentStatus } from "@/type";
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import CreateAssignmentDialog from "./create-assignment-dialog";
 import CreateAssignmentTable from "./create-assignment-table";
-import CreateAssignmentTableSkeleton from "./create-assignment-table-skeleton";
 
 const assignmentTabs: (TStudentAssignmentStatus | "ALL")[] = [
   "ALL",
@@ -61,9 +60,7 @@ export default function StudentAssignmentTable() {
           </TabsTrigger>
         ))}
       </TabsList>
-      <Suspense fallback={<CreateAssignmentTableSkeleton />}>
-        <CreateAssignmentTable setPage={setPage} queryParams={queryParams} />
-      </Suspense>
+      <CreateAssignmentTable setPage={setPage} queryParams={queryParams} />
     </Tabs>
   );
 }

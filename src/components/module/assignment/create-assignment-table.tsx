@@ -8,11 +8,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import TablePagination from "@/components/ui/tablePagination";
+import CreateAssignmentTableSkeleton from "./create-assignment-table-skeleton";
 import { toast } from "@/components/ui/toast";
 import {
   useAssignmentAction,
   useDeleteAssignment,
-  useSuspendedGetMyAssignments,
+  useGetMyAssignments,
 } from "@/hooks";
 import {
   AssignmentStatus,
@@ -50,7 +51,10 @@ export default function CreateAssignmentTable({
   setPage: React.Dispatch<React.SetStateAction<number>>;
   queryParams: IAssignmentQueryParams;
 }) {
-  const { data } = useSuspendedGetMyAssignments(queryParams);
+  const { data, isLoading, isError, error } = useGetMyAssignments(queryParams);
+
+  if (isLoading) return <CreateAssignmentTableSkeleton />;
+
   const assignments = data?.data ?? [];
   const totalPage = data?.meta?.totalPages || 1;
   const currentPage = data?.meta?.page ?? queryParams.page ?? 1;
@@ -73,9 +77,19 @@ export default function CreateAssignmentTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {assignments.length === 0 && (
+          {isError && (
             <TableRow>
-              <TableCell colSpan={8} className="text-center py-10">
+              <TableCell
+                colSpan={9}
+                className="text-center py-10 text-destructive"
+              >
+                {error.message || "Failed to load assignments."}
+              </TableCell>
+            </TableRow>
+          )}
+          {!isError && assignments.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={9} className="text-center py-10">
                 No assignments found.
               </TableCell>
             </TableRow>
