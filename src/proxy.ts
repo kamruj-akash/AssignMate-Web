@@ -1,6 +1,5 @@
 import { UserRole } from "@/type";
 import jwt from "jsonwebtoken";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import envConfig from "./config/envConfig";
 
@@ -24,22 +23,33 @@ const authRoutes = ["/login", "/register", "/verify"];
 const matchesRoute = (path: string, route: string) =>
   path === route || path.startsWith(`${route}/`);
 
-const decodeToken = (token?: string): ITokenPayload | null => {
-  if (!token) return null;
+const verifyToken = (
+  token: string | undefined,
+  secret: string,
+): ITokenPayload | null => {
+  if (!token || !secret) return null;
   try {
-    const decoded = jwt.verify(token, envConfig.JWT_SECRET) as ITokenPayload;
-    return decoded;
+    const decoded = jwt.verify(token, secret) as ITokenPayload;
+    return decoded.role in roleHome ? decoded : null;
   } catch {
     return null;
   }
 };
 
-export async function proxy(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const cookieStore = await cookies();
 
-  const user = decodeToken(cookieStore.get("accessToken")?.value);
-  console.log(user);
+  // The API renews an expired access token from the refresh token,
+  // so a valid refresh token alone still counts as signed in.
+  const user =
+    verifyToken(
+      request.cookies.get("accessToken")?.value,
+      envConfig.JWT_ACCESS_SECRET,
+    ) ??
+    verifyToken(
+      request.cookies.get("refreshToken")?.value,
+      envConfig.JWT_REFRESH_SECRET,
+    );
 
   if (authRoutes.some((route) => matchesRoute(pathname, route))) {
     if (user) {
