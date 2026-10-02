@@ -162,7 +162,7 @@ export default function CreateAssignmentTable({
         </TableBody>
       </Table>
       {totalPage > 1 && (
-        <TablePagination setPage={setPage} totalPages={totalPage} />
+        <TablePagination currentPage={currentPage} setPage={setPage} totalPages={totalPage} />
       )}
     </>
   );

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -28,16 +27,18 @@ const btnArray = (
 export default function TablePagination({
   setPage,
   totalPages,
+  currentPage,
 }: {
   setPage: (page: number) => void;
   totalPages: number;
+  currentPage: number;
 }) {
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(currentPage);
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    // setCurrentPage(page);
     setPage(page);
   };
-
+  console.log(currentPage);
   return (
     <Pagination>
       <PaginationContent>
@@ -55,12 +56,7 @@ export default function TablePagination({
 
         {btnArray(totalPages, currentPage).map((page, index) =>
           page === "ellipsis" ? (
-            <PaginationItem
-              key={`ellipsis-${
-                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                index
-              }`}
-            >
+            <PaginationItem key={`ellipsis-${index}`}>
               <PaginationEllipsis />
             </PaginationItem>
           ) : (

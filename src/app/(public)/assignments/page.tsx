@@ -1,5 +1,3 @@
-import { Footer } from "@/components/home/footer";
-import { Navbar } from "@/components/home/navbar";
 import OpenAssignments from "@/components/module/assignment/open-assignments";
 import type { Metadata } from "next";
 
@@ -12,7 +10,6 @@ export const metadata: Metadata = {
 export default function AssignmentsPage() {
   return (
     <>
-      <Navbar />
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 pt-12 pb-20 sm:pt-16">
         <div className="mb-10 max-w-2xl space-y-3">
           <p className="text-sm font-medium text-primary">Open for bids</p>
@@ -26,7 +23,6 @@ export default function AssignmentsPage() {
         </div>
         <OpenAssignments />
       </main>
-      <Footer />
     </>
   );
 }

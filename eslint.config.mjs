@@ -18,6 +18,7 @@ const eslintConfig = defineConfig([
       // Disable the base rule because it can report incorrect errors with TypeScript.
       "no-unused-vars": "warn",
       "@typescript-eslint/no-unused-vars": "warn",
+      "no-unused-vars": "warn",
     },
   },
 ]);

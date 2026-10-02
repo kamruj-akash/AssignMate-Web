@@ -9,7 +9,11 @@ import { useGetOpenAssignments } from "@/hooks";
 import { useDebounce } from "@/hooks/debounce.hook";
 import { IOpenAssignment, IOpenAssignmentQueryParams } from "@/type";
 import { cn } from "cn";
-import { differenceInCalendarDays, format, formatDistanceToNow } from "date-fns";
+import {
+  differenceInCalendarDays,
+  format,
+  formatDistanceToNow,
+} from "date-fns";
 import { CalendarClock, FileSearch, Paperclip, Search } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -48,6 +52,7 @@ export default function OpenAssignments() {
 
   const assignments = data?.data ?? [];
   const total = data?.meta?.total ?? 0;
+  const currentPage = data?.meta?.page ?? page;
   const totalPages = data?.meta?.totalPages ?? 1;
 
   return (
@@ -125,8 +130,7 @@ export default function OpenAssignments() {
 
       {totalPages > 1 && (
         <TablePagination
-          // Remount so the pagination's own page state resets with filters.
-          key={`${sort}-${debouncedSearchTerm}`}
+          currentPage={currentPage}
           setPage={setPage}
           totalPages={totalPages}
         />
