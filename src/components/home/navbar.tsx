@@ -4,8 +4,8 @@ import Logo from "../shared/logo";
 import { hasSession } from "@/lib/session";
 
 const NavItems = [
-  { tittle: "How it works", href: "#how-it-works" },
-  { tittle: "Why trust us", href: "#trust" },
+  { tittle: "How it works", href: "/#how-it-works" },
+  { tittle: "Why trust us", href: "/#trust" },
   { tittle: "Posted Assignments", href: "/assignments" },
 ];
 

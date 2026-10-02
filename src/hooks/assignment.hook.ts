@@ -7,8 +7,9 @@ import {
   postAssignment,
   submitAssignment,
 } from "@/api";
-import { IAssignmentQueryParams } from "@/type";
+import { IAssignmentQueryParams, IOpenAssignmentQueryParams } from "@/type";
 import {
+  keepPreviousData,
   useMutation,
   useQuery,
   useQueryClient,
@@ -25,10 +26,11 @@ export const useCreateAssignment = () => {
   });
 };
 
-export const useGetOpenAssignments = () => {
+export const useGetOpenAssignments = (params?: IOpenAssignmentQueryParams) => {
   return useQuery({
-    queryKey: ["open-assignments"],
-    queryFn: getOpenAssignments,
+    queryKey: ["open-assignments", params],
+    queryFn: () => getOpenAssignments(params),
+    placeholderData: keepPreviousData,
   });
 };
 

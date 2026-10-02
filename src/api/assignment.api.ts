@@ -3,14 +3,18 @@ import {
   IAssignment,
   IAssignmentQueryParams,
   ICreateAssignmentPayload,
+  IOpenAssignment,
+  IOpenAssignmentQueryParams,
   IPaginatedResponse,
   TAssignmentActionPayload,
   TSubmitAssignmentPayload,
 } from "@/type";
 
-export const getOpenAssignments = () => {
-  // searchTerm=&page=1&limit=10&sortBy=createdAt&sortOrder=desc
-  return apiClient("/assignment/feed");
+export const getOpenAssignments = (params?: IOpenAssignmentQueryParams) => {
+  return apiClient<IPaginatedResponse<IOpenAssignment>>("/assignment/feed", {
+    method: "GET",
+    params,
+  });
 };
 
 export const postAssignment = ({

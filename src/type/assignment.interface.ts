@@ -68,6 +68,27 @@ export interface IAssignment {
   _count: { bids: number };
 }
 
+export interface IOpenAssignmentQueryParams {
+  page?: number;
+  limit?: number;
+  searchTerm?: string;
+  sortBy?: "createdAt" | "deadline" | "budget";
+  sortOrder?: "asc" | "desc";
+}
+
+export interface IOpenAssignment {
+  id: string;
+  studentId: string;
+  title: string;
+  description: string;
+  attachmentUrl: { publicId: string; secure_url: string } | null;
+  budget: string;
+  deadline: string;
+  status: "OPEN";
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface IPaginatedResponse<T> {
   success: boolean;
   message?: string;
