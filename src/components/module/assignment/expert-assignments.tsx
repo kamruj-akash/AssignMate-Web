@@ -1,5 +1,6 @@
 "use client";
 
+import SubmitWorkSheet from "@/components/module/assignment/submit-work-sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -311,10 +312,9 @@ function ExpertAssignmentActions({
         </Button>
       )}
 
-      {/* {(assignment.status === "ASSIGNED" ||
-        assignment.status === "IN_PROGRESS") && (
-        <SubmitWorkDialog assignment={assignment} />
-      )} */}
+      {assignment.status === "IN_PROGRESS" && (
+        <SubmitWorkSheet assignment={assignment} />
+      )}
 
       {assignment.submissionUrl && (
         <Button

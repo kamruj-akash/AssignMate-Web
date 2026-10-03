@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/table";
 import TablePagination from "@/components/ui/tablePagination";
 import CreateAssignmentTableSkeleton from "./create-assignment-table-skeleton";
+import RejectSubmissionSheet from "./reject-submission-sheet";
 import ViewBidsSheet from "./view-bids-sheet";
 import PayNowButton from "../payment/pay-now-button";
 import { toast } from "@/components/ui/toast";
@@ -242,11 +243,24 @@ function AssignmentActions({ assignment }: { assignment: IAssignment }) {
       {assignment.status === "SUBMITTED" && (
         <Button
           size="sm"
+          variant="outline"
           disabled={isPending}
-          onClick={() => handleAction("COMPLETED")}
+          onClick={() => handleAction("UNDER_REVIEW")}
         >
-          {isPending ? "Approving..." : "Approve"}
+          {isPending ? "Updating..." : "Mark as under review"}
         </Button>
+      )}
+      {assignment.status === "UNDER_REVIEW" && (
+        <>
+          <Button
+            size="sm"
+            disabled={isPending}
+            onClick={() => handleAction("COMPLETED")}
+          >
+            {isPending ? "Approving..." : "Approve"}
+          </Button>
+          <RejectSubmissionSheet assignment={assignment} />
+        </>
       )}
       {assignment.status === "OPEN" && (
         <>

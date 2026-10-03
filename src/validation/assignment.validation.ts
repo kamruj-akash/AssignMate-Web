@@ -59,3 +59,28 @@ export const placeBidZodSchema = z.object({
     .min(20, "Cover note must be at least 20 characters long")
     .max(2000, "Cover note must be at most 2000 characters long"),
 });
+
+export const submitWorkZodSchema = z.object({
+  status: z.enum(["SUBMITTED"], "Status is required"),
+  attachment: z
+    .array(z.instanceof(File))
+    .min(1, "Please attach your deliverable")
+    .max(1, "Only one attachment is allowed")
+    .refine(
+      (files) => files.every((file) => file.size <= MAX_ATTACHMENT_SIZE),
+      "Attachment must be 10MB or smaller",
+    )
+    .refine(
+      (files) =>
+        files.every((file) => ACCEPTED_ATTACHMENT_TYPES.includes(file.type)),
+      "Only PDF, DOC, DOCX, ZIP, JPG or PNG files are allowed",
+    ),
+});
+
+export const rejectSubmissionZodSchema = z.object({
+  reason: z
+    .string()
+    .trim()
+    .min(20, "Reason must be at least 20 characters long")
+    .max(1000, "Reason must be at most 1000 characters long"),
+});
