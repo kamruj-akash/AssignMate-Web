@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/table";
 import TablePagination from "@/components/ui/tablePagination";
 import CreateAssignmentTableSkeleton from "./create-assignment-table-skeleton";
+import ViewBidsSheet from "./view-bids-sheet";
+import PayNowButton from "../payment/pay-now-button";
 import { toast } from "@/components/ui/toast";
 import {
   useAssignmentAction,
@@ -51,7 +53,8 @@ export default function CreateAssignmentTable({
   setPage: React.Dispatch<React.SetStateAction<number>>;
   queryParams: IAssignmentQueryParams;
 }) {
-  const { data, isLoading, isError, error } = useGetMyAssignments(queryParams);
+  const { data, isLoading, isError, error, isPlaceholderData } =
+    useGetMyAssignments(queryParams);
 
   if (isLoading) return <CreateAssignmentTableSkeleton />;
 
@@ -62,7 +65,12 @@ export default function CreateAssignmentTable({
 
   return (
     <>
-      <Table className="border border-border">
+      <Table
+        className={cn(
+          "border border-border transition-opacity",
+          isPlaceholderData && "opacity-60",
+        )}
+      >
         <TableHeader>
           <TableRow>
             <TableHead>SL</TableHead>
@@ -142,7 +150,7 @@ export default function CreateAssignmentTable({
               <TableCell className="text-right">
                 {assignment.attachmentUrl ? (
                   <a
-                    href={assignment.attachmentUrl}
+                    href={assignment.attachmentUrl.secure_url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
@@ -225,6 +233,12 @@ function AssignmentActions({ assignment }: { assignment: IAssignment }) {
           View Submission
         </Button>
       )}
+      {assignment.status === "AWAITING_PAYMENT" && (
+        <PayNowButton
+          assignmentId={assignment.id}
+          amount={assignment.budget}
+        />
+      )}
       {assignment.status === "SUBMITTED" && (
         <Button
           size="sm"
@@ -236,7 +250,7 @@ function AssignmentActions({ assignment }: { assignment: IAssignment }) {
       )}
       {assignment.status === "OPEN" && (
         <>
-          <Button size="sm">View Bids</Button>
+          <ViewBidsSheet assignment={assignment} />
           <Button
             variant="destructive"
             size="sm"

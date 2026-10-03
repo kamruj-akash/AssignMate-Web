@@ -7,6 +7,7 @@ import {
   IOpenAssignmentQueryParams,
   IPaginatedResponse,
   TAssignmentActionPayload,
+  TAssignmentDetails,
   TSubmitAssignmentPayload,
 } from "@/type";
 
@@ -32,12 +33,17 @@ export const postAssignment = ({
 };
 
 export const getAssignmentById = (assignmentId: string) => {
-  return apiClient(`/assignment/${assignmentId}/get`);
+  return apiClient<{ success: boolean; message: string; data: TAssignmentDetails }>(
+    `/assignment/${assignmentId}/get`,
+  );
 };
 
-export const getMyAssignments = (params?: IAssignmentQueryParams) => {
+// Students get IAssignment rows, experts get IExpertAssignment rows.
+export const getMyAssignments = <T = IAssignment>(
+  params?: IAssignmentQueryParams,
+) => {
   // searchTerm=&status=ASSIGNED&page=1&limit=10&sortBy=createdAt&sortOrder=desc
-  return apiClient<IPaginatedResponse<IAssignment>>(
+  return apiClient<IPaginatedResponse<T>>(
     "/assignment/my-assignments",
     {
       method: "GET",
@@ -46,15 +52,13 @@ export const getMyAssignments = (params?: IAssignmentQueryParams) => {
   );
 };
 
-export const submitAssignment = ({
-  assignmentId,
-  attachment,
-  status,
-}: TSubmitAssignmentPayload) => {
+export const submitAssignment = (payload: TSubmitAssignmentPayload) => {
   const formData = new FormData();
-  formData.append("body", JSON.stringify({ status }));
-  formData.append("attachment", attachment);
-  return apiClient(`/assignment/${assignmentId}/submit`, {
+  formData.append("body", JSON.stringify({ status: payload.status }));
+  if (payload.status === "SUBMITTED") {
+    formData.append("attachment", payload.attachment);
+  }
+  return apiClient(`/assignment/${payload.assignmentId}/submit`, {
     method: "PATCH",
     body: formData,
   });

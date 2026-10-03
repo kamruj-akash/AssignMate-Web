@@ -7,8 +7,17 @@ import {
   postAssignment,
   submitAssignment,
 } from "@/api";
-import { IAssignmentQueryParams, IOpenAssignmentQueryParams } from "@/type";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  IAssignment,
+  IAssignmentQueryParams,
+  IOpenAssignmentQueryParams,
+} from "@/type";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 export const useCreateAssignment = () => {
   const queryClient = useQueryClient();
@@ -24,13 +33,17 @@ export const useGetOpenAssignments = (params?: IOpenAssignmentQueryParams) => {
   return useQuery({
     queryKey: ["open-assignments", params],
     queryFn: () => getOpenAssignments(params),
+    placeholderData: keepPreviousData,
   });
 };
 
-export const useGetMyAssignments = (params?: IAssignmentQueryParams) => {
+export const useGetMyAssignments = <T = IAssignment>(
+  params?: IAssignmentQueryParams,
+) => {
   return useQuery({
     queryKey: ["my-assignments", params],
-    queryFn: () => getMyAssignments(params),
+    queryFn: () => getMyAssignments<T>(params),
+    placeholderData: keepPreviousData,
   });
 };
 

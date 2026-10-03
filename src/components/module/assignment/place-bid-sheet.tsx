@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
-import { usePlaceBid } from "@/hooks/bid.hook";
+import { usePlaceBid } from "@/hooks";
 import { IOpenAssignment, IPlaceBidPayload } from "@/type";
 import { placeBidZodSchema } from "@/validation";
 import { useForm } from "@tanstack/react-form";

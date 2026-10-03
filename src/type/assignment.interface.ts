@@ -1,3 +1,5 @@
+import { TBidStatus } from "./bid.interface";
+
 export interface ICreateAssignmentPayload {
   title: string;
   description: string;
@@ -6,11 +8,9 @@ export interface ICreateAssignmentPayload {
   attachment?: File;
 }
 
-export type TSubmitAssignmentPayload = {
-  assignmentId: string;
-  attachment: File;
-  status: "SUBMITTED";
-};
+export type TSubmitAssignmentPayload =
+  | { assignmentId: string; status: "IN_PROGRESS" }
+  | { assignmentId: string; status: "SUBMITTED"; attachment: File };
 
 export type AssignmentStatus =
   | "IN_PROGRESS"
@@ -49,7 +49,7 @@ export interface IAssignment {
   studentId: string;
   title: string;
   description: string;
-  attachmentUrl: string | null;
+  attachmentUrl: { publicId: string; secure_url: string } | null;
   budget: string;
   deadline: string;
   status: TStudentAssignmentStatus;
@@ -67,6 +67,28 @@ export interface IAssignment {
   } | null;
   _count: { bids: number };
 }
+
+export interface IExpertAssignment
+  extends Omit<IAssignment, "assignedExpert" | "_count"> {
+  student: {
+    id: string;
+    institution: string | null;
+    academicLevel: string | null;
+    user: { name: string; email: string };
+  };
+  acceptedBid: {
+    id: string;
+    proposedAmount: string;
+    estimatedDelivery: string;
+    status: TBidStatus;
+  } | null;
+}
+
+// Public /assignment/:id/get row: no relations, deliverable or dispute notes.
+export type TAssignmentDetails = Omit<
+  IAssignment,
+  "assignedExpert" | "_count" | "submissionUrl" | "disputedReason"
+>;
 
 export interface IOpenAssignmentQueryParams {
   page?: number;
@@ -99,11 +121,4 @@ export interface IPaginatedResponse<T> {
     total: number;
     totalPages: number;
   };
-}
-
-export interface IPlaceBidPayload {
-  assignmentId: string;
-  proposedAmount: number;
-  estimatedDelivery: string;
-  coverNote: string;
 }
