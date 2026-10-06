@@ -1,3 +1,5 @@
-export default function page() {
-  return <div>page</div>;
+import StudentOverview from "@/components/module/student/student-overview";
+
+export default function StudentOverviewPage() {
+  return <StudentOverview />;
 }

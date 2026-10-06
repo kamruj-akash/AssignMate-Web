@@ -51,7 +51,10 @@ const hasEscrow = (status: TPaymentStatus) =>
 export default function PaymentsTable({
   status,
   emptyMessage = "No payments yet.",
+  showStudent = true,
 }: {
+  // Students only see their own payments, so the column is noise for them
+  showStudent?: boolean;
   // Locks the table to one status and hides the status tabs
   status?: TPaymentStatus;
   emptyMessage?: string;
@@ -72,6 +75,7 @@ export default function PaymentsTable({
     });
 
   const payments = data?.data ?? [];
+  const columnCount = showStudent ? COLUMN_COUNT : COLUMN_COUNT - 1;
   const currentPage = data?.meta?.page ?? page;
   const totalPages = data?.meta?.totalPages ?? 1;
   const limit = data?.meta?.limit ?? PAGE_LIMIT;
@@ -82,7 +86,11 @@ export default function PaymentsTable({
         <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           className="pl-8"
-          placeholder="Search by assignment, student or transaction ID..."
+          placeholder={
+            showStudent
+              ? "Search by assignment, student or transaction ID..."
+              : "Search by assignment or transaction ID..."
+          }
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
@@ -112,7 +120,7 @@ export default function PaymentsTable({
       )}
 
       {isLoading ? (
-        <AdminTableSkeleton columns={COLUMN_COUNT} />
+        <AdminTableSkeleton columns={columnCount} />
       ) : (
         <Table
           className={cn(
@@ -124,7 +132,7 @@ export default function PaymentsTable({
             <TableRow>
               <TableHead>SL</TableHead>
               <TableHead>Assignment</TableHead>
-              <TableHead>Student</TableHead>
+              {showStudent && <TableHead>Student</TableHead>}
               <TableHead>Transaction</TableHead>
               <TableHead>Paid at</TableHead>
               <TableHead className="text-right">Amount</TableHead>
@@ -136,7 +144,7 @@ export default function PaymentsTable({
             {isError && (
               <TableRow>
                 <TableCell
-                  colSpan={COLUMN_COUNT}
+                  colSpan={columnCount}
                   className="py-10 text-center text-destructive"
                 >
                   {error.message || "Failed to load payments."}
@@ -146,7 +154,7 @@ export default function PaymentsTable({
             {!isError && payments.length === 0 && (
               <TableRow>
                 <TableCell
-                  colSpan={COLUMN_COUNT}
+                  colSpan={columnCount}
                   className="py-10 text-center text-muted-foreground"
                 >
                   {debouncedSearchTerm || tab !== (status ?? "ALL")
@@ -166,12 +174,14 @@ export default function PaymentsTable({
                     Created {formatDate(payment.createdAt)}
                   </p>
                 </TableCell>
-                <TableCell>
-                  <p>{payment.assignment.student.user.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {payment.assignment.student.user.email}
-                  </p>
-                </TableCell>
+                {showStudent && (
+                  <TableCell>
+                    <p>{payment.assignment.student.user.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {payment.assignment.student.user.email}
+                    </p>
+                  </TableCell>
+                )}
                 <TableCell>
                   <p className="font-mono text-xs">
                     {payment.bkashTrxId || payment.transactionId || "—"}

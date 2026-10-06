@@ -4,3 +4,4 @@ export * from "./bid.api";
 export * from "./payment.api";
 export * from "./admin.api";
 export * from "./expert.api";
+export * from "./student.api";

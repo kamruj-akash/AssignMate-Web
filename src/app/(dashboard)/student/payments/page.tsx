@@ -1,3 +1,5 @@
+import StudentPayments from "@/components/module/student/student-payments";
+
 export default function PaymentsPage() {
-  return <div>Payments</div>;
+  return <StudentPayments />;
 }

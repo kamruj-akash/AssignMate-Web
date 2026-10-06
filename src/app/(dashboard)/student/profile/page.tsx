@@ -1,3 +1,5 @@
+import StudentProfile from "@/components/module/student/student-profile";
+
 export default function ProfilePage() {
-  return <div>Profile</div>;
+  return <StudentProfile />;
 }

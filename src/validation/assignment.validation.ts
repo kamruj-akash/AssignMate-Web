@@ -111,3 +111,33 @@ export const expertProfileZodSchema = z.object({
     .number("Rate must be a number")
     .positive("Rate must be greater than 0"),
 });
+
+// Mirrors UpdateStudentProfileZod; blank optional fields are dropped before sending
+export const studentProfileZodSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(3, "Name must be at least 3 characters")
+    .max(255, "Name must be at most 255 characters"),
+  phoneNo: z
+    .string()
+    .trim()
+    .refine(
+      (value) => value === "" || (value.length >= 6 && value.length <= 20),
+      "Phone number must be 6-20 characters",
+    ),
+  institution: z
+    .string()
+    .trim()
+    .refine(
+      (value) => value === "" || (value.length >= 2 && value.length <= 255),
+      "Institution must be 2-255 characters",
+    ),
+  academicLevel: z
+    .string()
+    .trim()
+    .refine(
+      (value) => value === "" || (value.length >= 2 && value.length <= 100),
+      "Academic level must be 2-100 characters",
+    ),
+});
