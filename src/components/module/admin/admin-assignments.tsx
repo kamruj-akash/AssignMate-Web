@@ -5,6 +5,7 @@ import { TStudentAssignmentStatus } from "@/type";
 import { cn } from "cn";
 import { formatCurrency, numberFormatter } from "./admin-format";
 import BreakdownList, { BreakdownListSkeleton } from "./breakdown-list";
+import CancellationRequests from "./cancellation-requests";
 import DateRangeFilter, { useDateRange } from "./date-range-filter";
 import StatCard, { StatCardSkeleton } from "./stat-card";
 
@@ -127,6 +128,8 @@ export default function AdminAssignments() {
           </div>
         </div>
       )}
+
+      <CancellationRequests />
     </div>
   );
 }

@@ -5,9 +5,12 @@ import {
   getAllStudents,
   getEscrowVault,
   getRevenueAnalytics,
+  getCancellationRequests,
   getStudentById,
+  resolveCancellation,
 } from "@/api";
 import {
+  ICancellationQueryParams,
   IDateRangeParams,
   IExpertQueryParams,
   IStudentQueryParams,
@@ -75,5 +78,25 @@ export const useGetStudentById = (studentId: string, enabled = true) => {
     queryKey: ["admin-student", studentId],
     queryFn: () => getStudentById(studentId),
     enabled,
+  });
+};
+
+export const useGetCancellationRequests = (params?: ICancellationQueryParams) => {
+  return useQuery({
+    queryKey: ["admin-cancellations", params],
+    queryFn: () => getCancellationRequests(params),
+    placeholderData: keepPreviousData,
+  });
+};
+
+export const useResolveCancellation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: resolveCancellation,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-cancellations"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-overview"] });
+      queryClient.invalidateQueries({ queryKey: ["revenue-analytics"] });
+    },
   });
 };

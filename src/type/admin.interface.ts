@@ -202,3 +202,39 @@ export interface IMe {
   authProvider: "CREDENTIAL" | "GOOGLE";
   createdAt: string;
 }
+
+export type TCancellationDecision = "APPROVE" | "REJECT";
+
+export interface ICancellationQueryParams {
+  searchTerm?: string;
+  page?: number;
+  limit?: number;
+}
+
+// Assignment the student cancelled whose escrow is still HELD.
+export interface ICancellationRequest {
+  id: string;
+  title: string;
+  budget: string;
+  status: TStudentAssignmentStatus;
+  submissionUrl: { url: string; publicId: string } | null;
+  disputedReason: string | null;
+  updatedAt: string;
+  student: { id: string; user: { name: string; email: string } };
+  assignedExpert: {
+    id: string;
+    university: string;
+    user: { name: string; email: string };
+  } | null;
+  escrow: {
+    id: string;
+    totalAmount: string;
+    expertEarnings: string;
+    status: TEscrowStatus;
+  } | null;
+}
+
+export type TResolveCancellationPayload = {
+  assignmentId: string;
+  decision: TCancellationDecision;
+};

@@ -1,6 +1,8 @@
 import apiClient from "@/lib/apiClient";
 import {
   IAdminOverview,
+  ICancellationQueryParams,
+  ICancellationRequest,
   IAdminStudent,
   IAdminStudentDetails,
   IDateRangeParams,
@@ -11,6 +13,7 @@ import {
   IRevenueAnalytics,
   IStudentQueryParams,
   TApproveExpertPayload,
+  TResolveCancellationPayload,
 } from "@/type";
 
 type TResponse<T> = { success: boolean; message: string; data: T };
@@ -59,4 +62,27 @@ export const getAllStudents = (params?: IStudentQueryParams) => {
 
 export const getStudentById = (studentId: string) => {
   return apiClient<TResponse<IAdminStudentDetails>>(`/student/${studentId}`);
+};
+
+export const getCancellationRequests = (params?: ICancellationQueryParams) => {
+  return apiClient<IPaginatedResponse<ICancellationRequest>>(
+    "/assignment/admin/cancellations",
+    {
+      method: "GET",
+      params,
+    },
+  );
+};
+
+export const resolveCancellation = ({
+  assignmentId,
+  decision,
+}: TResolveCancellationPayload) => {
+  return apiClient<TResponse<unknown>>(
+    `/assignment/admin/cancellations/${assignmentId}/resolve`,
+    {
+      method: "PATCH",
+      body: { decision },
+    },
+  );
 };
