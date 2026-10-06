@@ -6,7 +6,12 @@ import {
   placeBid,
 } from "@/api";
 import { IBidQueryParams } from "@/type";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 export const usePlaceBid = () => {
   const queryClient = useQueryClient();
@@ -34,6 +39,7 @@ export const useGetMyBids = (params?: IBidQueryParams) => {
   return useQuery({
     queryKey: ["my-bids", params],
     queryFn: () => getMyBids(params),
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -42,7 +48,6 @@ export const useAcceptBid = () => {
   return useMutation({
     mutationFn: acceptBid,
     onSuccess: () => {
-      // accepting closes the assignment and rejects every other bid on it
       queryClient.invalidateQueries({ queryKey: ["assignment-bids"] });
       queryClient.invalidateQueries({ queryKey: ["my-assignments"] });
       queryClient.invalidateQueries({ queryKey: ["open-assignments"] });
@@ -56,6 +61,7 @@ export const useDeleteBid = () => {
     mutationFn: deleteBid,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-bids"] });
+      queryClient.invalidateQueries({ queryKey: ["expert-overview"] });
     },
   });
 };

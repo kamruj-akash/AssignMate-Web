@@ -92,3 +92,22 @@ export const rejectExpertZodSchema = z.object({
     .min(10, "Reason must be at least 10 characters long")
     .max(500, "Reason must be at most 500 characters long"),
 });
+
+export const expertProfileZodSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(3, "Name must be at least 3 characters")
+    .max(255, "Name must be at most 255 characters"),
+  phoneNo: z
+    .string()
+    .trim()
+    .refine(
+      (value) => value === "" || /^\+?[0-9]{7,15}$/.test(value),
+      "Phone number must be 7-15 digits",
+    ),
+  bio: z.string().trim().max(1000, "Bio must be at most 1000 characters"),
+  ratePerAssignment: z
+    .number("Rate must be a number")
+    .positive("Rate must be greater than 0"),
+});

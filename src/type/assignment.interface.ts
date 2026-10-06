@@ -42,6 +42,8 @@ export interface IAssignmentQueryParams {
   limit?: number;
   status?: TStudentAssignmentStatus | "OPEN";
   searchTerm?: string;
+  sortBy?: "createdAt" | "updatedAt" | "deadline" | "budget";
+  sortOrder?: "asc" | "desc";
 }
 
 export interface IAssignment {

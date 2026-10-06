@@ -1,3 +1,5 @@
+import ExpertEarnings from "@/components/module/expert/expert-earnings";
+
 export default function EarningsPage() {
-  return <div>Earnings</div>;
+  return <ExpertEarnings />;
 }

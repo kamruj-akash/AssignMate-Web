@@ -10,14 +10,14 @@ export interface IPlaceBidPayload {
 }
 
 export interface IBidQueryParams {
+  status?: TBidStatus;
   page?: number;
   limit?: number;
   sortBy?: "createdAt" | "proposedAmount" | "estimatedDelivery";
   sortOrder?: "asc" | "desc";
 }
 
-// A bid as the assignment owner (student) sees it. Rejected bids are omitted
-// by the API.
+
 export interface IAssignmentBid {
   id: string;
   proposedAmount: string;
@@ -34,7 +34,8 @@ export interface IAssignmentBid {
   };
 }
 
-// A bid as the expert who placed it sees it.
+
+
 export interface IMyBid {
   id: string;
   assignmentId: string;
@@ -50,6 +51,8 @@ export interface IMyBid {
     title: string;
     description: string;
     status: TStudentAssignmentStatus;
+    budget: string;
+    deadline: string;
     createdAt: string;
   };
 }
