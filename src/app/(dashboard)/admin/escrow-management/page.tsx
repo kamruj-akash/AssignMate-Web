@@ -1,3 +1,5 @@
+import EscrowManagement from "@/components/module/admin/escrow-management";
+
 export default function EscrowManagementPage() {
-  return <div>Escrow Management</div>;
+  return <EscrowManagement />;
 }

@@ -1,3 +1,5 @@
-export default function PaymentsPage() {
-  return <div>Payments</div>;
+import AdminPayments from "@/components/module/admin/admin-payments";
+
+export default function AdminPaymentsPage() {
+  return <AdminPayments />;
 }

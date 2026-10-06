@@ -19,63 +19,63 @@ import {
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
-import { useAssignmentAction } from "@/hooks";
-import { IAssignment } from "@/type";
-import { rejectSubmissionZodSchema } from "@/validation";
+import { useApproveExpert } from "@/hooks";
+import { IAdminExpert } from "@/type";
+import { rejectExpertZodSchema } from "@/validation";
 import { useForm } from "@tanstack/react-form";
-import { ExternalLink, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 
-export default function RejectSubmissionSheet({
-  assignment,
+export default function RejectExpertSheet({
+  expert,
+  disabled,
 }: {
-  assignment: IAssignment;
+  expert: IAdminExpert;
+  disabled?: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger render={<Button size="sm" variant="destructive" />}>
+      <SheetTrigger
+        render={<Button size="sm" variant="destructive" disabled={disabled} />}
+      >
         Reject
       </SheetTrigger>
 
       <SheetContent className="w-full gap-0 data-[side=right]:sm:max-w-lg">
-        <RejectSubmissionForm assignment={assignment} setOpen={setOpen} />
+        <RejectExpertForm expert={expert} setOpen={setOpen} />
       </SheetContent>
     </Sheet>
   );
 }
 
-function RejectSubmissionForm({
-  assignment,
+function RejectExpertForm({
+  expert,
   setOpen,
 }: {
-  assignment: IAssignment;
+  expert: IAdminExpert;
   setOpen: (open: boolean) => void;
 }) {
-  const { mutate: changeAction, isPending } = useAssignmentAction();
+  const { mutate: approveExpert, isPending } = useApproveExpert();
 
   const form = useForm({
     defaultValues: { reason: "" },
-    validators: { onSubmit: rejectSubmissionZodSchema },
+    validators: { onSubmit: rejectExpertZodSchema },
     onSubmit: ({ value }) => {
-      changeAction(
-        {
-          assignmentId: assignment.id,
-          status: "CANCELLED",
-          reason: value.reason.trim(),
-        },
+      approveExpert(
+        { expertId: expert.id, status: "REJECT", reason: value.reason.trim() },
         {
           onSuccess: (res) => {
             setOpen(false);
             toast.add({
-              title: res?.message || "Submission rejected",
+              title: res?.message || "Expert rejected",
               type: "success",
             });
           },
           onError: (err) => {
             toast.add({
-              title: err.message || "Failed to reject submission",
+              title: err.message || "Failed to reject expert",
               type: "error",
             });
           },
@@ -94,36 +94,21 @@ function RejectSubmissionForm({
       }}
     >
       <SheetHeader className="pr-12">
-        <SheetTitle className="text-lg font-semibold text-balance">
-          Reject submission
+        <SheetTitle className="text-lg font-semibold">
+          Reject expert application
         </SheetTitle>
-        <SheetDescription className="line-clamp-2">
-          {assignment.title}
+        <SheetDescription>
+          {expert.user.name} · {expert.user.email}
         </SheetDescription>
       </SheetHeader>
 
       <div className="flex-1 space-y-6 overflow-y-auto px-4 pb-4">
         <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm">
-          The assignment will be marked as{" "}
-          <span className="font-medium text-destructive">CANCELLED</span>. The
-          payment stays on hold while an admin reviews your reason and the
-          expert
-          {assignment.assignedExpert &&
-            ` (${assignment.assignedExpert.user.name})`}
-          &apos;s submission.
+          The application will be marked as{" "}
+          <span className="font-medium text-destructive">REJECTED</span> and the
+          applicant will receive your reason by email. They can re-apply with
+          new documents.
         </div>
-
-        {assignment.submissionUrl && (
-          <a
-            href={assignment.submissionUrl.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-          >
-            <ExternalLink className="size-4" />
-            View submission
-          </a>
-        )}
 
         <form.Field name="reason">
           {(field) => {
@@ -135,14 +120,14 @@ function RejectSubmissionForm({
                 <Textarea
                   id={field.name}
                   rows={6}
-                  placeholder="Explain what's wrong with the submission and what needs to change..."
+                  placeholder="e.g. Submitted documents were unreadable. Please re-upload clear copies."
                   className={isInvalid ? "border-destructive" : ""}
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
                 />
                 <FieldDescription>
-                  Be specific so an admin can review it quickly.
+                  Tell the applicant what to fix. 10–500 characters.
                 </FieldDescription>
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -165,7 +150,7 @@ function RejectSubmissionForm({
               <Loader2 className="animate-spin" /> Rejecting...
             </>
           ) : (
-            "Reject submission"
+            "Reject application"
           )}
         </Button>
       </SheetFooter>

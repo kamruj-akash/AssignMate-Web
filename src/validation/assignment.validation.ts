@@ -84,3 +84,11 @@ export const rejectSubmissionZodSchema = z.object({
     .min(20, "Reason must be at least 20 characters long")
     .max(1000, "Reason must be at most 1000 characters long"),
 });
+
+export const rejectExpertZodSchema = z.object({
+  reason: z
+    .string()
+    .trim()
+    .min(10, "Reason must be at least 10 characters long")
+    .max(500, "Reason must be at most 500 characters long"),
+});

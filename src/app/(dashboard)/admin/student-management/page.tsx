@@ -1,3 +1,5 @@
+import StudentManagement from "@/components/module/admin/student-management";
+
 export default function StudentManagementPage() {
-  return <div>Student Management</div>;
+  return <StudentManagement />;
 }

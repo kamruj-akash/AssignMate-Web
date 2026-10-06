@@ -1,3 +1,5 @@
-export default function AssignmentsPage() {
-  return <div>Assignments</div>;
+import AdminAssignments from "@/components/module/admin/admin-assignments";
+
+export default function AdminAssignmentsPage() {
+  return <AdminAssignments />;
 }
