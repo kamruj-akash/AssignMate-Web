@@ -52,7 +52,7 @@ export async function proxy(request: NextRequest) {
   //   console.log(newAccessToken);
   // }
 
-  const user = verifyToken(accessToken, envConfig.JWT_REFRESH_SECRET);
+  const user = verifyToken(accessToken, envConfig.JWT_ACCESS_SECRET);
   // console.log(user)
   if (authRoutes.some((route) => matchesRoute(pathname, route))) {
     if (user) {

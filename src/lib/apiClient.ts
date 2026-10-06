@@ -19,7 +19,8 @@ export class ApiError extends Error {
 }
 
 const apiClient = ofetch.create({
-  baseURL: envConfig.PUBLIC_API,
+  baseURL:
+    typeof window === "undefined" ? envConfig.SERVER_API : envConfig.PUBLIC_API,
   credentials: "include",
   onResponseError({ response }) {
     const data = response._data as IApiErrorResponse | undefined;
